@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/brettweavnet/outliers.png)](http://travis-ci.org/brettweavnet/outliers)
+
 # Outliers
 
 Outliers is a framework for verifying configuration of resources.
