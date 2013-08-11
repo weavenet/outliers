@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'outliers'
+require 'outliers/cli'
+
+Outliers::CLI.start
