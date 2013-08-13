@@ -9,18 +9,22 @@ describe Outliers::Run do
   end
 
   describe "#process_evaluations_in_config_folder" do
-    it "should process all evaluation files in config folder" do
-      Dir.should_receive(:entries).with('/test').and_return ['.', '..', 'test1.rb', 'test2.rb']
+    it "should process all .rb files in config folder and sub folders" do
+      files = ['/test/test1.rb', '/test/dir', '/test/dir/test2.rb', '/test/dir/test_other_file']
+      Dir.should_receive(:glob).with('/test/**/*').and_return files
+
+      ['/test/test1.rb', '/test/dir/test2.rb', '/test/dir/test_other_file'].each do |f|
+        File.should_receive(:directory?).with(f).and_return false
+      end
+      File.should_receive(:directory?).with('/test/dir').and_return true
+
       File.should_receive(:read).with('/test/test1.rb').and_return evaluation1
-      File.should_receive(:read).with('/test/test2.rb').and_return evaluation2
+      File.should_receive(:read).with('/test/dir/test2.rb').and_return evaluation2
  
       subject.should_receive(:instance_eval).with(evaluation1)
       subject.should_receive(:instance_eval).with(evaluation2)
       subject.process_evaluations_in_config_folder
     end
-
-    it "should skip directories"
-    it "should only evaluate .rb files"
   end
 
   describe "#evaluate" do

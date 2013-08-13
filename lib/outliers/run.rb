@@ -8,13 +8,12 @@ module Outliers
 
     def process_evaluations_in_config_folder
       evaluations_path = File.join Outliers.config_path
-      entries = Dir.entries(evaluations_path) - ['.', '..']
-      entries.each do |e|
-        file = File.join(evaluations_path, e)
-        unless File.directory? file
-          logger.info "Processing '#{file}'."
-          self.instance_eval File.read(file)
-        end
+      files = Dir.glob(File.join(evaluations_path, '**', '*'))
+      files.each do |file|
+        next if File.directory? file
+        next if File.extname(file) != '.rb'
+        logger.info "Processing '#{file}'."
+        self.instance_eval File.read(file)
       end
     end
 
