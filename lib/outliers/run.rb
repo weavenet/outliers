@@ -17,8 +17,8 @@ module Outliers
       end
     end
 
-    def evaluate(name='unspecified')
-      yield Evaluation.new :name => name, :run => self
+    def evaluate(name='unspecified', &block)
+      Evaluation.new(:name => name, :run => self).instance_eval &block
     end
 
     def passed

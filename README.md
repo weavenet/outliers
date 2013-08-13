@@ -92,83 +92,83 @@ To process a directory:
 
 To verify all instances are in a VPC, create the file **ec2.rb** and add the following block:
 
-    evaluate do |e|
-      e.connect 'aws_prod', provider: 'aws_ec2'
-      e.resources 'instance'
-      e.verify 'vpc'
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2'
+      resources 'instance'
+      verify 'vpc'
     end
 
 Files can have multiple evaluations, to add a validation that overrides the region:
 
-    evaluate do |e|
-      e.connect 'aws_prod', provider: 'aws_ec2'
-      e.resources 'instance'
-      e.verify 'vpc'
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2'
+      resources 'instance'
+      verify 'vpc'
     end
 
-    evaluate do |e|
-      e.connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      e.resources 'instance'
-      e.verify 'vpc'
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
+      resources 'instance'
+      verify 'vpc'
     end
 
 The DSL supports any valid Ruby code. To iterate over multiple regions:
 
     ['us-west-1', 'us-west-2', 'us-east-1'].each do |region|
-      evaluate do |e|
-        e.connect 'aws_prod', provider: 'aws_ec2', region: region
-        e.resources 'instance'
-        e.verify 'vpc'
+      evaluate do
+        connect 'aws_prod', provider: 'aws_ec2', region: region
+        resources 'instance'
+        verify 'vpc'
       end
     end
 
 Evaluations can be given names to help identify Outliers in results.
 
-    evaluate "validate_database_retention_period" do |e|
-      e.connect 'aws_prod', provider: 'aws_rds', region: 'us-west-1'
-      e.resources 'db_instance'
-      e.verify 'backup_retention_period', days: 2
+    evaluate "validate_database_retention_period" do
+      connect 'aws_prod', provider: 'aws_rds', region: 'us-west-1'
+      resources 'db_instance'
+      verify 'backup_retention_period', days: 2
     end
 
 To pass arguments to a verification:
 
-    evaluate do |e|
-      e.connect 'aws_prod', provider: 'aws_rds', region: 'us-west-1'
-      e.resources 'db_instance'
-      e.verify 'backup_retention_period', days: 2
+    evaluate do
+      connect 'aws_prod', provider: 'aws_rds', region: 'us-west-1'
+      resources 'db_instance'
+      verify 'backup_retention_period', days: 2
     end
 
 To pass multiple arguments, specify them as an array:
 
-    evaluate do |e|
-      e.connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      e.resources 'instance'
-      e.verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
+      resources 'instance'
+      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 
 To only target a specific resource:
 
-    evaluate do |e|
-      e.connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      e.resources 'instance', 'i-12345678'
-      e.verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
+      resources 'instance', 'i-12345678'
+      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 
 To target multiple resources, you can pass an array:
 
-    evaluate do |e|
-      e.connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      e.resources 'instance', ['i-12345678', 'i-abcdef12']
-      e.verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
+      resources 'instance', ['i-12345678', 'i-abcdef12']
+      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 
 Sometimes you want to exclude resources that are known exceptions, to exclude an instance from the VPC validation:
 
-    evaluate do |e|
-      e.connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      e.resources 'instance'
-      e.exclude 'i-12345678'
-      e.verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
+      resources 'instance'
+      exclude 'i-12345678'
+      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 
 ### Help

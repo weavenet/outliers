@@ -29,10 +29,19 @@ describe Outliers::Run do
   end
 
   describe "#evaluate" do
-    it "should kick off a new evaluation and yield it to the block" do
+    it "should kick off a new evaluation and pass the block for execuation" do
       Outliers::Evaluation.should_receive(:new).with(:name => 'my evaluation', :run => subject).and_return evaluation1
-      subject.evaluate('my evaluation') do |e|
-        expect(e).to eq(evaluation1)
+      evaluation1.should_receive(:connect).with('test')
+      subject.evaluate 'my evaluation' do
+        connect 'test'
+      end
+    end
+
+    it "should kick off a new evaluation with unspecified name" do
+      Outliers::Evaluation.should_receive(:new).with(:name => 'unspecified', :run => subject).and_return evaluation1
+      evaluation1.should_receive(:connect).with('test')
+      subject.evaluate do
+        connect 'test'
       end
     end
   end
