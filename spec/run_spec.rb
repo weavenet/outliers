@@ -6,6 +6,7 @@ describe Outliers::Run do
 
   before do
     stub_logger
+    Outliers.config_path '/test'
   end
 
   describe "#process_evaluations_in_config_folder" do
