@@ -99,7 +99,7 @@ module Outliers
       @all = all.select {|r| targets.include? r.id }
 
       unless all.any?
-        raise Outliers::Exceptions::TargetNotFound.new "No '#{targets}' found."
+        raise Outliers::Exceptions::TargetNotFound.new "No resources found matching one or more of '#{targets}'."
       end
 
       @all

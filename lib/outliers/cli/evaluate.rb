@@ -14,12 +14,18 @@ module Outliers
 
         load_credentials
 
+        @options[:parsed_arguments] = parse_arguments
+
+        # Make options available global
+        # Required to read by instance_eval in @run.evaluate 
+        @@options = @options
+
         begin
-          @run.evaluate "Validationf from CLI." do |e|
-            e.connect 'cli'
-            e.resources @options[:resources], target_resources
-            e.exclude @options[:exclude] if @options[:exclude].any?
-            e.verify @options[:verification], arguments
+          @run.evaluate "Running verification provided via CLI." do
+            connect 'cli'
+            resources @@options[:resource], @@options[:target_resources]
+            exclude @@options[:exclude] if @@options[:exclude].any?
+            verify @@options[:verification], @@options[:parsed_arguments]
           end
         rescue Outliers::Exceptions::Base => e
           @logger.error e.message
@@ -54,12 +60,8 @@ module Outliers
 
         @run.credentials = { 'cli' => credentials }
       end
-
-      def target_resources
-        @options[:target_resources]
-      end
       
-      def arguments
+      def parse_arguments
         arguments = {}
 
         @options[:arguments].each do |a|
@@ -92,8 +94,8 @@ module Outliers
             @options[:provider] = o
           end
 
-          opts.on("-r", "--resources [RESOURCES]", "Name of resources collection to evaluate.") do |o|
-            @options[:resources] = o
+          opts.on("-r", "--resources [RESOURCES]", "Name of resource collection to evaluate.") do |o|
+            @options[:resource] = o
           end
 
           opts.on("-t", "--target_resources [TARGET_RESOURCES]", "Target resources with key name (can be specified more than once).") do |o|
