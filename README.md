@@ -11,6 +11,10 @@ Outliers is a framework for verifying configuration of resources.
 * Resource configuration can be verified (launched from given AMI, contain private objects, etc).
 * Those not passing verifications, are flagged as Outliers.
 
+## Requirements
+
+* Ruby 1.9.3 or greater.
+
 ## Installation
 
 Install the gem:
