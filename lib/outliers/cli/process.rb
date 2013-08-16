@@ -22,8 +22,10 @@ module Outliers
         passed = @run.passed.count
         failed = @run.failed.count
 
+        @logger.info "Evaluations completed."
+
         @run.failed.each do |f|
-          @logger.info "Evaluation '#{f.description}' failed."
+          @logger.info "Evaluation '#{f.evaluation}' failed."
         end
 
         @logger.info "(#{failed} evaluations failed, #{passed} evaluations passed.)"

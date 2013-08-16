@@ -75,7 +75,7 @@ describe Outliers::Evaluation do
     context "#verify" do
       let(:result1) { mock 'result1' }
       let(:result2) { mock 'result2' }
-      let(:verification_response) { stub 'verification_response', passing_keys: ['1', '2'], failing_keys: ['3', '4'] }
+      let(:verification_response) { ( { passing_keys: ['1', '2'], failing_keys: ['3', '4'] } ) }
 
       before do
         resources.should_receive(:load_all).and_return ['resource1', 'resource2']

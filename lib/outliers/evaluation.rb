@@ -39,15 +39,15 @@ module Outliers
     def verify(verification, arguments={})
       @resources_loaded ||= collection.load_all
 
-      r = collection.verify verification, arguments.keys_to_sym
+      verification_result = collection.verify verification, arguments.keys_to_sym
 
       result = Outliers::Result.new evaluation:   @name,
-                                    failing_keys: r.failing_keys,
-                                    passing_keys: r.passing_keys,
+                                    failing_keys: verification_result.fetch(:failing_keys),
+                                    passing_keys: verification_result.fetch(:passing_keys),
                                     resource:     @collection,
                                     verification: verification
 
-      logger.info "Evaluation '#{result}'."
+      logger.info "Result: '#{result}'."
 
       @run.results << result
     end

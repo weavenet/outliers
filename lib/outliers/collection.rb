@@ -82,17 +82,6 @@ module Outliers
       self.public_methods.include? name.to_sym
     end
 
-    def send_resources_verification(verification, arguments)
-      set_target_resources verification if targets.any?
-
-      results = map do |resource|
-        result = send_verification resource, verification, arguments
-        logger.debug "Verification of resource '#{resource.id}' #{result ? 'passed' : 'failed'}."
-        result
-      end
-      !results.include? false
-    end
-
     def set_target_resources(verification)
       logger.info "Verifying target '#{targets.join(', ')}'."
 
@@ -105,12 +94,22 @@ module Outliers
       @all
     end
 
+    def send_resources_verification(verification, arguments)
+      set_target_resources verification if targets.any?
+
+      failed = reject do |resource|
+        result = send_verification resource, verification, arguments
+        logger.debug "Verification of resource '#{resource.id}' #{result ? 'passed' : 'failed'}."
+        result
+      end
+      { failing_keys: failed, passing_keys: targets - failed }
+    end
+
     def send_verification(object, verification, arguments) 
       if object.method(verification).arity.zero?
         if arguments.any?
           raise Outliers::Exceptions::NoArgumentRequired.new "Verification '#{verification}' does not require an arguments."
         end
-
         object.public_send verification
       else
         if arguments.none?
