@@ -11,7 +11,7 @@ module Outliers
       def equals?(args)
         list = Array(args[:keys])
         logger.debug "Verifying '#{list.join(',')}' equals #{all.empty? ? 'no resources' : all_by_key.join(',')}."
-        all_by_key - list
+        all.reject {|r| list.include? r}
       end
 
       module_function

@@ -26,6 +26,8 @@ module Outliers
 
         @run.failed.each do |f|
           @logger.info "Evaluation '#{f.evaluation}' failed verification '#{f.resource}' '#{f.verification}'."
+          @logger.debug "Passing '#{f.passing_keys}'"
+          @logger.debug "Failing '#{f.failing_keys}'"
         end
 
         @logger.info "(#{failed} evaluations failed, #{passed} evaluations passed.)"
