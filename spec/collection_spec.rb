@@ -55,27 +55,32 @@ describe Outliers::Collection do
     end
 
     it "should verify the given verification against the colection" do
-      expect(subject.verify 'none?', {}).to be_false
+      expect(subject.verify 'none_exist?', {}).
+        to eq( { failing_keys: [resource1, resource2], passing_keys: [] } )
     end
 
     it "should verify the given verification against the colection with options" do
-      expect(subject.verify 'equals?', :keys => ['resource1', 'resource2']).to be_true
+      expect(subject.verify 'equals?', :keys => ['resource1', 'resource2']).
+        to eq( { failing_keys: [], passing_keys: [resource1, resource2] } )
     end
 
     it "should verify the given verification against each resource in the collection" do
       [resource1, resource2].each {|r| r.define_singleton_method :valid_resource?, lambda { true } }
-      expect(subject.verify 'valid_resource?').to be_true
+      expect(subject.verify 'valid_resource?').
+        to eq( { failing_keys: [], passing_keys: [resource1, resource2] } )
     end
 
     it "should appaned a ? to the policy" do
-      expect(subject.verify 'none').to be_false
+      expect(subject.verify 'none_exist').
+        to eq( { failing_keys: [resource1, resource2], passing_keys: [] } )
     end
 
     it "should remove all but the target resources if one is required and given" do
       subject.targets = ['resource1', 'in-valid']
       resource1.should_receive(:method).with('target_me?').and_return(stub 'method', :arity => 0)
-      resource1.should_receive(:target_me?)
-      expect(subject.verify 'target_me?').to be_true
+      resource1.should_receive(:target_me?).and_return false
+      expect(subject.verify 'target_me?').
+        to eq( { failing_keys: [resource1], passing_keys: [] } )
     end
 
     it "should raise an error if the target resources does not exist" do
@@ -90,13 +95,15 @@ describe Outliers::Collection do
 
     it "should raise an error if the verification does not require arguments and arguments are given" do
       resource1.define_singleton_method :valid_resource?, lambda { true }
-      expect { subject.verify 'valid_resource?', 'unneeded argument' => 3 }.to raise_error(Outliers::Exceptions::NoArgumentRequired)
+      expect { subject.verify 'valid_resource?', 'unneeded argument' => 3 }.
+        to raise_error(Outliers::Exceptions::NoArgumentRequired)
     end
 
     it "should verify the given verification against each resource in the collection with options" do
       resource1.should_receive(:valid_resource?).with('test_arg' => 2).and_return true
       resource2.should_receive(:valid_resource?).with('test_arg' => 2).and_return true
-      expect(subject.verify 'valid_resource?', 'test_arg' => 2).to be_true
+      expect(subject.verify 'valid_resource?', 'test_arg' => 2).
+        to eq( { failing_keys: [], passing_keys: [resource1, resource2] } )
     end
   end
 

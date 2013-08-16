@@ -50,7 +50,7 @@ module Outliers
       logger.debug "Verifying resources '#{all_by_key.join(', ')}'."
 
       if collection_verification? name
-        send_verification self, name, arguments
+        send_collection_verification name, arguments
       else
         send_resources_verification name, arguments
       end
@@ -109,21 +109,23 @@ module Outliers
       { failing_keys: failing_keys, passing_keys: all - failing_keys }
     end
 
-    def send_verification(object, verification, arguments) 
-      failing_keys = []
+    def send_collection_verification(verification, arguments)
+      failing_keys = send_verification(self, verification, arguments)
+      { failing_keys: failing_keys, passing_keys: all - failing_keys }
+    end
 
+    def send_verification(object, verification, arguments) 
       if object.method(verification).arity.zero?
         if arguments.any?
           raise Outliers::Exceptions::NoArgumentRequired.new "Verification '#{verification}' does not require an arguments."
         end
-        failing_keys = object.public_send verification
+        object.public_send verification
       else
         if arguments.none?
           raise Outliers::Exceptions::ArgumentRequired.new "Verification '#{verification}' requires arguments."
         end
-        failing_keys = object.public_send verification, arguments
+        object.public_send verification, arguments
       end
-      { failing_keys: failing_keys, passing_keys: all - failing_keys }
     end
 
   end
