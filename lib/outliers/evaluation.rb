@@ -37,7 +37,7 @@ module Outliers
     end
 
     def verify(verification, arguments={})
-      collection.load_all
+      @resources_loaded ||= collection.load_all
 
       r = collection.verify verification, arguments.keys_to_sym
 
