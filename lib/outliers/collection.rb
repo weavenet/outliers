@@ -22,6 +22,10 @@ module Outliers
       array.inject(Object) {|o,c| o.const_get c}
     end
 
+    def to_s
+      self.class.to_human
+    end
+
     def initialize(provider)
       @targets   = []
       @provider = provider
@@ -97,26 +101,29 @@ module Outliers
     def send_resources_verification(verification, arguments)
       set_target_resources verification if targets.any?
 
-      failed = reject do |resource|
+      failing_keys = reject do |resource|
         result = send_verification resource, verification, arguments
         logger.debug "Verification of resource '#{resource.id}' #{result ? 'passed' : 'failed'}."
         result
       end
-      { failing_keys: failed, passing_keys: targets - failed }
+      { failing_keys: failing_keys, passing_keys: all - failing_keys }
     end
 
     def send_verification(object, verification, arguments) 
+      failing_keys = []
+
       if object.method(verification).arity.zero?
         if arguments.any?
           raise Outliers::Exceptions::NoArgumentRequired.new "Verification '#{verification}' does not require an arguments."
         end
-        object.public_send verification
+        failing_keys = object.public_send verification
       else
         if arguments.none?
           raise Outliers::Exceptions::ArgumentRequired.new "Verification '#{verification}' requires arguments."
         end
-        object.public_send verification, arguments
+        failing_keys = object.public_send verification, arguments
       end
+      { failing_keys: failing_keys, passing_keys: all - failing_keys }
     end
 
   end
