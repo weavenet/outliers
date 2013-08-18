@@ -126,7 +126,7 @@ The DSL supports any valid Ruby code. To iterate over multiple regions:
       end
     end
 
-Evaluations can run multiple verification. To validate instances are in a VPC, running and using a valid image:
+Evaluations can run multiple verifications. To validate instances are in a VPC, running and using a valid image:
 
     evaluate do
       connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
