@@ -4,30 +4,15 @@ module Outliers
       module Ec2
         class InstanceCollection < Collection
 
+          include Outliers::Filters::Aws::Tags
+
           def load_all
             connect.instances.map {|r| resource_class.new r}
           end
 
           def self.filters
-            [
-              { name: 'tag',
-                description: 'Filter instances tagged with the given tag name and value.',
-                args: 'TAG_NAME:VALUE"' }
-            ]
+            Outliers::Filters::Aws::Tags.filters
           end 
-
-          def filter_tag(value)
-            tag_name  = value.split(':').first
-            tag_value = value.split(':').last
-            logger.debug "Filtering by tag '#{tag_name}' = '#{tag_value}'."
-            all.select do |r|
-              if r.tags.has_key? tag_name
-                r.tags[tag_name] == tag_value
-              else
-                false
-              end
-            end
-          end
 
         end
       end
