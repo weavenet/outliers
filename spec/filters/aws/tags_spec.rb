@@ -7,11 +7,11 @@ describe Outliers::Filters::Aws::Tags do
     object
   end
 
-  let(:logger) { stub 'logger', debug: true }
+  let(:logger) { stub 'logger', debug: true, info: true }
   let(:tags1) { mock 'tags1' }
   let(:tags2) { mock 'tags2' }
-  let(:resource1) { stub 'resource1', tags: tags1 }
-  let(:resource2) { stub 'resource2', tags: tags2 }
+  let(:resource1) { stub 'resource1', tags: tags1, id: 'resource1' }
+  let(:resource2) { stub 'resource2', tags: tags2, id: 'resource2' }
 
   before do
     subject.stub :logger => logger

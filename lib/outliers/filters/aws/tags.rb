@@ -6,11 +6,15 @@ module Outliers
         def filter_tag(value)
           tag_name  = value.split(':').first
           tag_value = value.split(':').last
-          logger.debug "Filtering by tag '#{tag_name}' equals '#{tag_value}'."
+          logger.info "Filtering by tag '#{tag_name}' equals '#{tag_value}'."
           all.select do |r|
             if r.tags.has_key? tag_name
-              r.tags[tag_name] == tag_value
+              value = r.tags[tag_name]
+              result = value == tag_value
+              logger.debug "'#{r.id}' has tag with value '#{value}'. #{result ? 'Matches' : 'Does not match'} filter."
+              result
             else
+              logger.debug "'#{r.id}' does not have tag '#{tag_name}'"
               false
             end
           end
