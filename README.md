@@ -85,6 +85,10 @@ To exclude resources that are known exceptions:
 
     outliers evaluate -c aws_prod -p aws_ec2 -r instance -e i-12345678
 
+To filter resources:
+
+    outliers evaluate -c aws_prod -p aws_ec2 -r instance -f 'tag=Name:test_name'
+
 ### DSL
 
 To run Outliers as a DSL
