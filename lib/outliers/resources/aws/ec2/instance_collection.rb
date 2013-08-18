@@ -21,8 +21,11 @@ module Outliers
             tag_value = value.split(':').last
             logger.debug "Filtering by tag '#{tag_name}' = '#{tag_value}'."
             all.select do |r|
-              return false unless r.tags.has_key? tag_name
-              r.tags[tag_name] == tag_value
+              if r.tags.has_key? tag_name
+                r.tags[tag_name] == tag_value
+              else
+                false
+              end
             end
           end
 
