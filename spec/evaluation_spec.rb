@@ -72,6 +72,13 @@ describe Outliers::Evaluation do
       end
     end
 
+    context "#filter" do
+      it "should apply the given filter to the collection" do
+        resources.should_receive(:filter).with('tag' => 'Name:test123')
+        subject.filter 'tag' => 'Name:test123'
+      end
+    end
+
     context "#verify" do
       let(:result1) { mock 'result1' }
       let(:result2) { mock 'result2' }
