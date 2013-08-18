@@ -12,9 +12,6 @@ module Outliers
     class ArgumentRequired < Base
     end
 
-    class FilterMatchesNoResources < Base
-    end
-
     class InvalidBucket < Base
     end
 

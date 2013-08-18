@@ -60,14 +60,17 @@ module Outliers
 
       filtered_list = self.public_send "filter_#{name}", value
 
-      unless filtered_list.any?
-        raise Exceptions::FilterMatchesNoResources.new "No resources match filter."
-      end
+      logger.warn "No resources match filter." unless filtered_list.any?
+
       @all = filtered_list
     end
 
     def verify(name, arguments={})
       name << "?" unless name =~ /^.*\?$/
+
+      unless all.any?
+        return { failing_resources: [], passing_resources: [] }
+      end
 
       logger.debug "Verifying against following resources '#{all_by_key.join(', ')}'."
       logger.info "Verifying '#{name}'."

@@ -46,12 +46,6 @@ describe Outliers::Collection do
       expect { subject.filter('bogus' => 'Name:test123') }.
         to raise_error Outliers::Exceptions::UnknownFilter
     end
-
-    it "should raise an exception if not resources match the filter" do
-      subject.should_receive('filter_tag').with('Name:test123').and_return []
-      expect { subject.filter('tag' => 'Name:test123') }.
-        to raise_error Outliers::Exceptions::FilterMatchesNoResources
-    end
   end
 
   context "#key" do
@@ -124,6 +118,11 @@ describe Outliers::Collection do
       resource1.define_singleton_method :valid_resource?, lambda { true }
       expect { subject.verify 'valid_resource?', 'unneeded argument' => 3 }.
         to raise_error(Outliers::Exceptions::NoArgumentRequired)
+    end
+
+    it "should return empty passing and failing arrays if no resources exist in all" do
+      subject.stub :load_all => []
+      expect(subject.verify 'valid_resource?', {}).to eq( { failing_resources: [], passing_resources: [] } )
     end
 
     it "should verify the given verification against each resource in the collection with options" do
