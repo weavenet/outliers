@@ -1,14 +1,14 @@
 module Outliers
   class Result
 
-    attr_reader :evaluation, :failing_keys, :passing_keys, :resource, :verification
+    attr_reader :evaluation, :failing_resources, :passing_resources, :resource, :verification
 
     def initialize(args)
-      @evaluation   = args[:evaluation]
-      @failing_keys = args[:failing_keys]
-      @passing_keys = args[:passing_keys]
-      @resource     = args[:resource]
-      @verification = args[:verification]
+      @evaluation        = args[:evaluation]
+      @failing_resources = args[:failing_resources]
+      @passing_resources = args[:passing_resources]
+      @resource          = args[:resource]
+      @verification      = args[:verification]
     end
 
     def to_s
@@ -20,7 +20,7 @@ module Outliers
     end
 
     def failed?
-      @failing_keys.any?
+      @failing_resources.any?
     end
 
   end

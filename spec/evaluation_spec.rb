@@ -75,7 +75,7 @@ describe Outliers::Evaluation do
     context "#verify" do
       let(:result1) { mock 'result1' }
       let(:result2) { mock 'result2' }
-      let(:verification_response) { ( { passing_keys: ['1', '2'], failing_keys: ['3', '4'] } ) }
+      let(:verification_response) { ( { passing_resources: ['1', '2'], failing_resources: ['3', '4'] } ) }
 
       before do
         resources.should_receive(:load_all).and_return ['resource1', 'resource2']
@@ -84,37 +84,37 @@ describe Outliers::Evaluation do
 
       it "should verify the given method" do
         resources.should_receive(:verify).with('test_verification?', {}).and_return verification_response
-        Outliers::Result.should_receive(:new).with(evaluation:   'test',
-                                                   passing_keys: ['1','2'],
-                                                   failing_keys: ['3','4'],
-                                                   resource:     resources,
-                                                   verification: 'test_verification?').and_return result1
+        Outliers::Result.should_receive(:new).with(evaluation:        'test',
+                                                   passing_resources: ['1','2'],
+                                                   failing_resources: ['3','4'],
+                                                   resource:          resources,
+                                                   verification:      'test_verification?').and_return result1
         expect(subject.verify('test_verification?', {})).to eq([result1])
       end
 
       it "should convert all options to symbols" do
         resources.should_receive(:verify).with('test_verification?', :test => false).and_return verification_response
-        Outliers::Result.should_receive(:new).with(evaluation:   'test',
-                                                   passing_keys: ['1','2'],
-                                                   failing_keys: ['3','4'],
-                                                   resource:     resources,
-                                                   verification: 'test_verification?').and_return result1
+        Outliers::Result.should_receive(:new).with(evaluation:        'test',
+                                                   passing_resources: ['1','2'],
+                                                   failing_resources: ['3','4'],
+                                                   resource:          resources,
+                                                   verification:      'test_verification?').and_return result1
         expect(subject.verify('test_verification?', { 'test' => false } )).to eq([result1])
       end
 
       it "should run verify multiple times in given evaluation" do
         resources.should_receive(:verify).with('test_verification1?', :test => false).and_return verification_response
         resources.should_receive(:verify).with('test_verification2?', :test => true).and_return verification_response
-        Outliers::Result.should_receive(:new).with(evaluation:   'test',
-                                                   passing_keys: ['1','2'],
-                                                   failing_keys: ['3','4'],
-                                                   resource:     resources,
-                                                   verification: 'test_verification1?').and_return result1
-        Outliers::Result.should_receive(:new).with(evaluation:   'test',
-                                                   passing_keys: ['1','2'],
-                                                   failing_keys: ['3','4'],
-                                                   resource:     resources,
-                                                   verification: 'test_verification2?').and_return result2
+        Outliers::Result.should_receive(:new).with(evaluation:        'test',
+                                                   passing_resources: ['1','2'],
+                                                   failing_resources: ['3','4'],
+                                                   resource:          resources,
+                                                   verification:      'test_verification1?').and_return result1
+        Outliers::Result.should_receive(:new).with(evaluation:        'test',
+                                                   passing_resources: ['1','2'],
+                                                   failing_resources: ['3','4'],
+                                                   resource:          resources,
+                                                   verification:      'test_verification2?').and_return result2
         expect(subject.verify('test_verification1?', { 'test' => false })).to eq [result1]
         expect(subject.verify('test_verification2?', { 'test' => true })).to eq [result1, result2]
       end

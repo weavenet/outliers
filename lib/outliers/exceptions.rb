@@ -12,6 +12,9 @@ module Outliers
     class ArgumentRequired < Base
     end
 
+    class InvalidBucket < Base
+    end
+
     class NoArgumentRequired < Base
     end
 
@@ -25,9 +28,6 @@ module Outliers
     end
 
     class UnknownProvider < Base
-    end
-
-    class InvalidBucket < Base
     end
 
     class UnsupportedRegion < Base

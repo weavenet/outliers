@@ -41,11 +41,11 @@ module Outliers
 
       verification_result = collection.verify verification, arguments.keys_to_sym
 
-      result = Outliers::Result.new evaluation:   @name,
-                                    failing_keys: verification_result.fetch(:failing_keys),
-                                    passing_keys: verification_result.fetch(:passing_keys),
-                                    resource:     @collection,
-                                    verification: verification
+      result = Outliers::Result.new evaluation:        @name,
+                                    failing_resources: verification_result.fetch(:failing_resources),
+                                    passing_resources: verification_result.fetch(:passing_resources),
+                                    resource:          @collection,
+                                    verification:      verification
 
       logger.info "Result: '#{result}'."
 
