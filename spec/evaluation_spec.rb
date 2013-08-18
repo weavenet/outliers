@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Outliers::Evaluation do
   let(:run) { mock 'run' }
-  let(:result) { mock 'result' }
   let(:connect) { subject.connect('test_credentials_1') }
   let(:resources) { subject.resources('security_group') }
   subject { Outliers::Evaluation.new :run => run, :name => 'test' }
@@ -74,20 +73,50 @@ describe Outliers::Evaluation do
     end
 
     context "#verify" do
+      let(:result1) { mock 'result1' }
+      let(:result2) { mock 'result2' }
+      let(:verification_response) { ( { passing_resources: ['1', '2'], failing_resources: ['3', '4'] } ) }
+
       before do
-        resources.should_receive(:load_all)
-        Outliers::Result.should_receive(:new).with(description: 'test', :passed => true).and_return result
-        run.should_receive(:results).and_return([])
+        resources.should_receive(:load_all).and_return ['resource1', 'resource2']
+        run.stub results: []
       end
 
       it "should verify the given method" do
-        resources.should_receive(:verify).with('test_verification?', {}).and_return(true)
-        expect(subject.verify('test_verification?', {})).to eq([result])
+        resources.should_receive(:verify).with('test_verification?', {}).and_return verification_response
+        Outliers::Result.should_receive(:new).with(evaluation:        'test',
+                                                   passing_resources: ['1','2'],
+                                                   failing_resources: ['3','4'],
+                                                   resource:          resources,
+                                                   verification:      'test_verification?').and_return result1
+        expect(subject.verify('test_verification?', {})).to eq([result1])
       end
 
       it "should convert all options to symbols" do
-        resources.should_receive(:verify).with('test_verification?', :test => false).and_return(true)
-        expect(subject.verify('test_verification?', { 'test' => false } )).to eq([result])
+        resources.should_receive(:verify).with('test_verification?', :test => false).and_return verification_response
+        Outliers::Result.should_receive(:new).with(evaluation:        'test',
+                                                   passing_resources: ['1','2'],
+                                                   failing_resources: ['3','4'],
+                                                   resource:          resources,
+                                                   verification:      'test_verification?').and_return result1
+        expect(subject.verify('test_verification?', { 'test' => false } )).to eq([result1])
+      end
+
+      it "should run verify multiple times in given evaluation" do
+        resources.should_receive(:verify).with('test_verification1?', :test => false).and_return verification_response
+        resources.should_receive(:verify).with('test_verification2?', :test => true).and_return verification_response
+        Outliers::Result.should_receive(:new).with(evaluation:        'test',
+                                                   passing_resources: ['1','2'],
+                                                   failing_resources: ['3','4'],
+                                                   resource:          resources,
+                                                   verification:      'test_verification1?').and_return result1
+        Outliers::Result.should_receive(:new).with(evaluation:        'test',
+                                                   passing_resources: ['1','2'],
+                                                   failing_resources: ['3','4'],
+                                                   resource:          resources,
+                                                   verification:      'test_verification2?').and_return result2
+        expect(subject.verify('test_verification1?', { 'test' => false })).to eq [result1]
+        expect(subject.verify('test_verification2?', { 'test' => true })).to eq [result1, result2]
       end
     end
 

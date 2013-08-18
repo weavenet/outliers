@@ -22,6 +22,10 @@ module Outliers
       array.inject(Object) {|o,c| o.const_get c}
     end
 
+    def to_s
+      self.class.to_human
+    end
+
     def initialize(provider)
       @targets   = []
       @provider = provider
@@ -43,10 +47,15 @@ module Outliers
     def verify(name, arguments={})
       name << "?" unless name =~ /^.*\?$/
 
-      logger.debug "Verifying resources '#{all_by_key.join(', ')}'."
+      logger.debug "Resources '#{all_by_key.join(', ')}'."
+      logger.info "Verifying '#{name}'."
+
+      unless verification_exists? name
+        raise Exceptions::UnknownVerification.new "Unkown verification '#{name}'."
+      end
 
       if collection_verification? name
-        send_verification self, name, arguments
+        send_collection_verification name, arguments
       else
         send_resources_verification name, arguments
       end
@@ -66,6 +75,12 @@ module Outliers
 
     private
 
+    def verification_exists?(name)
+      m = resource_class.instance_methods - resource_class.class.instance_methods
+      m += Outliers::Verifications::Shared.instance_methods
+      (m - [:source, :id, :method_missing]).include? name.to_sym
+    end
+
     def all_by_key
       all.map {|r| r.public_send key}
     end
@@ -82,17 +97,6 @@ module Outliers
       self.public_methods.include? name.to_sym
     end
 
-    def send_resources_verification(verification, arguments)
-      set_target_resources verification if targets.any?
-
-      results = map do |resource|
-        result = send_verification resource, verification, arguments
-        logger.debug "Verification of resource '#{resource.id}' #{result ? 'passed' : 'failed'}."
-        result
-      end
-      !results.include? false
-    end
-
     def set_target_resources(verification)
       logger.info "Verifying target '#{targets.join(', ')}'."
 
@@ -105,12 +109,27 @@ module Outliers
       @all
     end
 
+    def send_resources_verification(verification, arguments)
+      set_target_resources verification if targets.any?
+
+      failing_resources = reject do |resource|
+        result = send_verification resource, verification, arguments
+        logger.debug "Verification of resource '#{resource.id}' #{result ? 'passed' : 'failed'}."
+        result
+      end
+      { failing_resources: failing_resources, passing_resources: all - failing_resources }
+    end
+
+    def send_collection_verification(verification, arguments)
+      failing_resources = send_verification(self, verification, arguments)
+      { failing_resources: failing_resources, passing_resources: all - failing_resources }
+    end
+
     def send_verification(object, verification, arguments) 
       if object.method(verification).arity.zero?
         if arguments.any?
           raise Outliers::Exceptions::NoArgumentRequired.new "Verification '#{verification}' does not require an arguments."
         end
-
         object.public_send verification
       else
         if arguments.none?
