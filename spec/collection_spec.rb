@@ -18,7 +18,7 @@ describe Outliers::Collection do
   context "#to_human" do
     it "should return the human name for this resource" do
       expect(Outliers::Resources::Aws::Ec2::SecurityGroupCollection.to_human).to eq('aws_ec2_security_group')
-      expect(Outliers::Resources::Github::RepoCollection.to_human).to eq('github_repo')
+      expect(Outliers::Resources::Aws::S3::BucketCollection.to_human).to eq('aws_s3_bucket')
     end
   end
 

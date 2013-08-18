@@ -6,7 +6,7 @@ Outliers is a framework for verifying configuration of resources.
 
 ## Overview
 
-* Applications and teams rely on multiple service providers (AWS, Github, etc).
+* Applications and teams rely on multiple service providers (AWS, etc).
 * Providers deliver like resources with complex configuration (EC2 Instances, S3 Buckets, etc).
 * Resource configuration can be verified (launched from given AMI, contain private objects, etc).
 * Those not passing verifications, are flagged as Outliers.
@@ -22,6 +22,8 @@ Install the gem:
     gem install outliers
 
 ## Setup
+
+**Currently Outliers only supports AWS**
 
 Create **~/outliers.yml** with a list of credentials in the following format:
 
@@ -41,7 +43,9 @@ Multiple accounts can be specified, to add a prod and preprod AWS account:
       access_key_id: AAA
       secret_access_key: BBB
 
-Depending on the provider, different keys and values are required. For a list of providers:
+Depending on the provider, different keys and values are required.
+
+For a list of providers:
 
     outliers providers
 
