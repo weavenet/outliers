@@ -126,6 +126,16 @@ The DSL supports any valid Ruby code. To iterate over multiple regions:
       end
     end
 
+Evaluations can run multiple verification. To validate instances are in a VPC, running and using a valid image:
+
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
+      resources 'instance'
+      verify 'vpc'
+      verify 'runng'
+      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
+    end
+
 Evaluations can be given names to help identify Outliers in results.
 
     evaluate "validate_database_retention_period" do

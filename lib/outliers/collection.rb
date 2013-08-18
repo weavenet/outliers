@@ -77,6 +77,7 @@ module Outliers
 
     def verification_exists?(name)
       m = resource_class.instance_methods - resource_class.class.instance_methods
+      m += Outliers::Verifications::Shared.instance_methods
       (m - [:source, :id, :method_missing]).include? name.to_sym
     end
 
