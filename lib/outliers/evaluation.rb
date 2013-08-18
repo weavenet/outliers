@@ -36,6 +36,10 @@ module Outliers
       collection.exclude_by_key Array(exclusions)
     end
 
+    def filter(args)
+      collection.filter args
+    end
+
     def verify(verification, arguments={})
       @resources_loaded ||= collection.load_all
 

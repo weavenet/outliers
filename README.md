@@ -132,7 +132,7 @@ Evaluations can run multiple verifications. To validate instances are in a VPC, 
       connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
       resources 'instance'
       verify 'vpc'
-      verify 'runng'
+      verify 'runningg'
       verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 

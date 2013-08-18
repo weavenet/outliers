@@ -17,6 +17,10 @@ module Outliers
        Outliers::Verifications::Shared.verifications + self.resource_class.verifications 
     end
 
+    def self.filters
+      []
+    end
+
     def self.resource_class
       array = self.to_s.gsub(/Collection$/, '').split('::')
       array.inject(Object) {|o,c| o.const_get c}
@@ -44,10 +48,19 @@ module Outliers
       @all = save
     end
 
+    def filter(args)
+      name  = args.keys.first
+      value = args.fetch name
+      logger.info "Applying filter '#{name}' with value '#{value}'."
+      filtered_list = self.public_send "filter_#{name}", value
+      raise Exceptions::FilterMatchesNoResources.new "No resources match filter." unless filtered_list.any?
+      @all = filtered_list
+    end
+
     def verify(name, arguments={})
       name << "?" unless name =~ /^.*\?$/
 
-      logger.debug "Resources '#{all_by_key.join(', ')}'."
+      logger.debug "Verifying against following resources '#{all_by_key.join(', ')}'."
       logger.info "Verifying '#{name}'."
 
       unless verification_exists? name
@@ -78,7 +91,8 @@ module Outliers
     def verification_exists?(name)
       m = resource_class.instance_methods - resource_class.class.instance_methods
       m += Outliers::Verifications::Shared.instance_methods
-      (m - [:source, :id, :method_missing]).include? name.to_sym
+      m -= [:source, :id, :method_missing]
+      m.include? name.to_sym
     end
 
     def all_by_key
