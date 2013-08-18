@@ -35,6 +35,20 @@ describe Outliers::Collection do
     end
   end
 
+  context "#filter" do
+    it "should apply the given filter to resources" do
+      subject.should_receive('filter_tag').with('Name:test123').and_return [resource1]
+      subject.filter 'tag' => 'Name:test123'
+      expect(subject.all).to eq([resource1])
+    end
+
+    it "should raise an exception if not resources match the filter" do
+      subject.should_receive('filter_tag').with('Name:test123').and_return []
+      expect { subject.filter('tag' => 'Name:test123') }.
+        to raise_error Outliers::Exceptions::FilterMatchesNoResources
+    end
+  end
+
   context "#key" do
     it "should return the key for the resource" do
       expect(subject.key).to eq('name')
