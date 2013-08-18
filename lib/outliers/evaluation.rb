@@ -37,13 +37,17 @@ module Outliers
     end
 
     def verify(verification, arguments={})
-      collection.load_all
+      @resources_loaded ||= collection.load_all
 
-      r = collection.verify verification, arguments.keys_to_sym
+      verification_result = collection.verify verification, arguments.keys_to_sym
 
-      result = Outliers::Result.new :description => @name, :passed => r
+      result = Outliers::Result.new evaluation:        @name,
+                                    failing_resources: verification_result.fetch(:failing_resources),
+                                    passing_resources: verification_result.fetch(:passing_resources),
+                                    resource:          @collection,
+                                    verification:      verification
 
-      logger.info "Evaluation '#{result}'."
+      logger.info "Result: '#{result}'."
 
       @run.results << result
     end

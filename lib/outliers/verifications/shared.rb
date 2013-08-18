@@ -5,13 +5,13 @@ module Outliers
       def none_exist?
         logger.debug 'Verifying no resources exist.'
         logger.debug "Found #{all.empty? ? 'no resources' : all_by_key.join(',')}."
-        all.empty?
+        all
       end
 
       def equals?(args)
         list = Array(args[:keys])
         logger.debug "Verifying '#{list.join(',')}' equals #{all.empty? ? 'no resources' : all_by_key.join(',')}."
-        list == all_by_key
+        all.reject {|r| list.include? r.id}
       end
 
       module_function
