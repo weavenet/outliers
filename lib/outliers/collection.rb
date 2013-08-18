@@ -51,9 +51,18 @@ module Outliers
     def filter(args)
       name  = args.keys.first
       value = args.fetch name
+
       logger.info "Applying filter '#{name}' with value '#{value}'."
+
+      unless self.public_methods.include? "filter_#{name}".to_sym
+        raise Exceptions::UnknownFilter.new "Unknown filter '#{name}'."
+      end
+
       filtered_list = self.public_send "filter_#{name}", value
-      raise Exceptions::FilterMatchesNoResources.new "No resources match filter." unless filtered_list.any?
+
+      unless filtered_list.any?
+        raise Exceptions::FilterMatchesNoResources.new "No resources match filter."
+      end
       @all = filtered_list
     end
 

@@ -30,6 +30,9 @@ module Outliers
     class UnknownVerification < Base
     end
 
+    class UnknownFilter < Base
+    end
+
     class UnknownProvider < Base
     end
 

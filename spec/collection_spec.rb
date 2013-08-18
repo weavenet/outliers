@@ -42,6 +42,11 @@ describe Outliers::Collection do
       expect(subject.all).to eq([resource1])
     end
 
+    it "should raise an exception if the filter does not exist" do
+      expect { subject.filter('bogus' => 'Name:test123') }.
+        to raise_error Outliers::Exceptions::UnknownFilter
+    end
+
     it "should raise an exception if not resources match the filter" do
       subject.should_receive('filter_tag').with('Name:test123').and_return []
       expect { subject.filter('tag' => 'Name:test123') }.
