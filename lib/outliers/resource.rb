@@ -8,7 +8,7 @@ module Outliers
     end
 
     def self.verifications
-      {}
+      []
     end
 
     def initialize(source)

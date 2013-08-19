@@ -6,9 +6,11 @@ Outliers is a framework for verifying configuration of resources.
 
 ## Overview
 
-* Applications and teams rely on multiple service providers (AWS, Github, etc).
+* Applications and teams rely on multiple service providers (AWS, etc).
 * Providers deliver like resources with complex configuration (EC2 Instances, S3 Buckets, etc).
 * Resource configuration can be verified (launched from given AMI, contain private objects, etc).
+* The resources can be included or excluded by their ID (Instance ID, Object Key, etc).
+* Resources can be included in the list by matching a filter (Instance has tag 'x' with value 'y').
 * Those not passing verifications, are flagged as Outliers.
 
 ## Requirements
@@ -22,6 +24,8 @@ Install the gem:
     gem install outliers
 
 ## Setup
+
+**Currently Outliers only supports AWS**
 
 Create **~/outliers.yml** with a list of credentials in the following format:
 
@@ -41,7 +45,9 @@ Multiple accounts can be specified, to add a prod and preprod AWS account:
       access_key_id: AAA
       secret_access_key: BBB
 
-Depending on the provider, different keys and values are required. For a list of providers:
+Depending on the provider, different keys and values are required.
+
+For a list of providers:
 
     outliers providers
 
@@ -80,6 +86,10 @@ To only target a specific resource:
 To exclude resources that are known exceptions:
 
     outliers evaluate -c aws_prod -p aws_ec2 -r instance -e i-12345678
+
+Resources have attributes which can be used to filter taret resoures. To filter resources based on an attribute:
+
+    outliers evaluate -c aws_prod -p aws_ec2 -r instance -f 'tag=Name:web'
 
 ### DSL
 
@@ -132,7 +142,7 @@ Evaluations can run multiple verifications. To validate instances are in a VPC, 
       connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
       resources 'instance'
       verify 'vpc'
-      verify 'runng'
+      verify 'running'
       verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 
@@ -182,6 +192,15 @@ Sometimes you want to exclude resources that are known exceptions, to exclude an
       connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
       resources 'instance'
       exclude 'i-12345678'
+      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
+    end
+
+Resources have attributes which can be used to filter taret resoures. To filter resources based on an attribute:
+
+    evaluate do
+      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
+      resources 'instance'
+      filter tag: 'Name:web'
       verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 

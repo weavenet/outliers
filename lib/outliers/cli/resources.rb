@@ -25,7 +25,10 @@ module Outliers
             name.slice! provider
             name[0] = ''
             puts name
-            r.verifications.each { |v| puts "  #{v[:name]}(#{v[:args]}) #{v[:description]}" }
+            puts "  Verifications:"
+            r.verifications.each { |v| puts "    #{v[:name]}(#{v[:args]}) #{v[:description]}" }
+            puts "  Filters:"
+            r.filters.each { |v| puts "    #{v[:name]}(#{v[:args]}) #{v[:description]}" }
           end
         else
           puts "No resources found for '#{provider}'."

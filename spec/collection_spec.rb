@@ -18,7 +18,7 @@ describe Outliers::Collection do
   context "#to_human" do
     it "should return the human name for this resource" do
       expect(Outliers::Resources::Aws::Ec2::SecurityGroupCollection.to_human).to eq('aws_ec2_security_group')
-      expect(Outliers::Resources::Github::RepoCollection.to_human).to eq('github_repo')
+      expect(Outliers::Resources::Aws::S3::BucketCollection.to_human).to eq('aws_s3_bucket')
     end
   end
 
@@ -32,6 +32,19 @@ describe Outliers::Collection do
     it "should exclude the given array of resources" do
       subject.exclude_by_key ['resource1']
       expect(subject.all).to eq([resource2])
+    end
+  end
+
+  context "#filter" do
+    it "should apply the given filter to resources" do
+      subject.should_receive('filter_tag').with('Name:test123').and_return [resource1]
+      subject.filter 'tag' => 'Name:test123'
+      expect(subject.all).to eq([resource1])
+    end
+
+    it "should raise an exception if the filter does not exist" do
+      expect { subject.filter('bogus' => 'Name:test123') }.
+        to raise_error Outliers::Exceptions::UnknownFilter
     end
   end
 
@@ -105,6 +118,11 @@ describe Outliers::Collection do
       resource1.define_singleton_method :valid_resource?, lambda { true }
       expect { subject.verify 'valid_resource?', 'unneeded argument' => 3 }.
         to raise_error(Outliers::Exceptions::NoArgumentRequired)
+    end
+
+    it "should return empty passing and failing arrays if no resources exist in all" do
+      subject.stub :load_all => []
+      expect(subject.verify 'valid_resource?', {}).to eq( { failing_resources: [], passing_resources: [] } )
     end
 
     it "should verify the given verification against each resource in the collection with options" do

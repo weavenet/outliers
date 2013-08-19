@@ -1,5 +1,4 @@
 require 'outliers/providers/aws'
-require 'outliers/providers/github'
 
 module Outliers
   module Providers

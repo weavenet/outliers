@@ -26,7 +26,7 @@ module Outliers
       targets_array = Array(targets)
 
       if targets_array.any?
-        logger.info "Verifying against '#{targets_array.join(', ')}' from '#{name}' collection."
+        logger.info "Verifying '#{targets_array.join(', ')}' from '#{name}' collection."
         collection.targets = targets_array
       end
       collection
@@ -34,6 +34,10 @@ module Outliers
 
     def exclude(exclusions)
       collection.exclude_by_key Array(exclusions)
+    end
+
+    def filter(args)
+      collection.filter args.keys_to_s
     end
 
     def verify(verification, arguments={})
@@ -47,7 +51,7 @@ module Outliers
                                     resource:          @collection,
                                     verification:      verification
 
-      logger.info "Result: '#{result}'."
+      logger.info "Verification '#{verification}' #{result}."
 
       @run.results << result
     end
