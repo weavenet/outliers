@@ -1,5 +1,4 @@
 require 'outliers/resources/aws'
-require 'outliers/resources/github'
  
 module Outliers
   module Resources

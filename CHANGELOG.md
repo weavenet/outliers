@@ -1,3 +1,10 @@
+## HEAD
+
+* Added filters
+* Added multiple verificaiton support
+* Remove all but AWS resources
+* Multiple bug fixes
+
 ## 0.1.1
 
 * Bug fix in evaluate CLI.

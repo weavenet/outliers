@@ -23,5 +23,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec", "~> 2.13.0"
 
   spec.add_runtime_dependency "aws-sdk", "1.14.1"
-  spec.add_runtime_dependency "github_api", "0.10.1"
 end

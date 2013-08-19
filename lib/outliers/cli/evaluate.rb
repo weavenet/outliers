@@ -2,7 +2,7 @@ module Outliers
   module CLI
     class Evaluate
       def evaluate
-        @options = { arguments: [], exclude: [], credentials: [], target_resources: [] }
+        @options = { arguments: [], exclude: [], filter: [], credentials: [], target_resources: [] }
         @credentials = {}
 
         option_parser.parse!
@@ -15,6 +15,7 @@ module Outliers
         load_credentials
 
         @options[:parsed_arguments] = parse_arguments
+        @options[:parsed_filters] = parse_filters
 
         # Make options available global
         # Required to read by instance_eval in @run.evaluate 
@@ -25,6 +26,7 @@ module Outliers
             connect 'cli'
             resources @@options[:resource], @@options[:target_resources]
             exclude @@options[:exclude] if @@options[:exclude].any?
+            filter @@options[:parsed_filters] if @@options[:filter].any?
             verify @@options[:verification], @@options[:parsed_arguments]
           end
         rescue Outliers::Exceptions::Base => e
@@ -61,6 +63,19 @@ module Outliers
         @run.credentials = { 'cli' => credentials }
       end
       
+      def parse_filters
+        filters = {}
+
+        @options[:filter].each do |a|
+          key = a.split('=').first
+          value = a.split('=').last
+          filters.merge! key => value
+        end
+
+        filters
+      end
+
+      
       def parse_arguments
         arguments = {}
 
@@ -88,6 +103,10 @@ module Outliers
 
           opts.on("-e", "--exclude [EXCLUDE]", "Exclude resources in collection with the given key (can be specified multiple times).") do |o|
             @options[:exclude] << o
+          end
+
+          opts.on("-f", "--fitler [FILTER]", "Equals seperated filter name and value (can be specified multiple times).") do |o|
+            @options[:filter] << o
           end
 
           opts.on("-p", "--provider [PROVIDER]", "Provider of target resources.") do |o|
