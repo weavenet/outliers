@@ -25,7 +25,7 @@ module Outliers
         @logger.info "Evaluations completed."
 
         @run.failed.each do |f|
-          @logger.info "Evaluation '#{f.evaluation}' failed verification '#{f.resource}' '#{f.verification}'."
+          @logger.info "Evaluation '#{f.evaluation}' verification '#{f.verification}' of '#{f.resource}' failed."
           @logger.debug "Failing resource IDs '#{f.failing_resources.map{|r| r.id}.join(', ')}'"
         end
 

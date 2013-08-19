@@ -51,7 +51,7 @@ module Outliers
                                     resource:          @collection,
                                     verification:      verification
 
-      logger.info "Result: '#{result}'."
+      logger.info "Verification '#{verification}' #{result}."
 
       @run.results << result
     end
