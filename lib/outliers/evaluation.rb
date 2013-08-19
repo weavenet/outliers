@@ -26,7 +26,7 @@ module Outliers
       targets_array = Array(targets)
 
       if targets_array.any?
-        logger.info "Verifying against '#{targets_array.join(', ')}' from '#{name}' collection."
+        logger.info "Verifying '#{targets_array.join(', ')}' from '#{name}' collection."
         collection.targets = targets_array
       end
       collection
@@ -44,6 +44,8 @@ module Outliers
       @resources_loaded ||= collection.load_all
 
       verification_result = collection.verify verification, arguments.keys_to_sym
+
+      logger.info "Running '#{verification}' verification."
 
       result = Outliers::Result.new evaluation:        @name,
                                     failing_resources: verification_result.fetch(:failing_resources),

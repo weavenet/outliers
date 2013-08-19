@@ -72,8 +72,8 @@ module Outliers
         return { failing_resources: [], passing_resources: [] }
       end
 
-      logger.debug "Verifying against following resources '#{all_by_key.join(', ')}'."
       logger.info "Verifying '#{name}'."
+      logger.debug "Target resources '#{all_by_key.join(', ')}'."
 
       unless verification_exists? name
         raise Exceptions::UnknownVerification.new "Unkown verification '#{name}'."
