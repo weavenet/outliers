@@ -77,6 +77,11 @@ describe Outliers::Evaluation do
         resources.should_receive(:filter).with('tag' => 'Name:test123')
         subject.filter 'tag' => 'Name:test123'
       end
+
+      it "should convert keys in the args hash to strings" do
+        resources.should_receive(:filter).with('tag' => 'Name:test123')
+        subject.filter tag: 'Name:test123'
+      end
     end
 
     context "#verify" do

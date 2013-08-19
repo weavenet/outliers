@@ -37,7 +37,7 @@ module Outliers
     end
 
     def filter(args)
-      collection.filter args
+      collection.filter args.keys_to_s
     end
 
     def verify(verification, arguments={})
