@@ -200,7 +200,7 @@ Resources have attributes which can be used to filter taret resoures. To filter 
     evaluate do
       connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
       resources 'instance'
-      filter  tag: 'Name:web'
+      filter tag: 'Name:web'
       verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 
