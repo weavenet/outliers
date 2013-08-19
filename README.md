@@ -87,7 +87,9 @@ To exclude resources that are known exceptions:
 
     outliers evaluate -c aws_prod -p aws_ec2 -r instance -e i-12345678
 
-Resources have attributes which can be used to filter target resources. To filter instances who have tag 'Name' equal to 'web'.
+Resources have attributes which can be used to filter target resources.
+
+To filter instances who have tag 'Name' equal to 'web'.
 
     outliers evaluate -c aws_prod -p aws_ec2 -r instance -f 'tag=Name:web'
 
@@ -195,7 +197,9 @@ Sometimes you want to exclude resources that are known exceptions, to exclude an
       verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
 
-Resources have attributes which can be used to filter target resources. To filter instances who have tag 'Name' equal to 'web'.
+Resources have attributes which can be used to filter target resources.
+
+To filter instances who have tag 'Name' equal to 'web'.
 
     evaluate do
       connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
