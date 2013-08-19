@@ -45,8 +45,6 @@ module Outliers
 
       verification_result = collection.verify verification, arguments.keys_to_sym
 
-      logger.info "Running '#{verification}' verification."
-
       result = Outliers::Result.new evaluation:        @name,
                                     failing_resources: verification_result.fetch(:failing_resources),
                                     passing_resources: verification_result.fetch(:passing_resources),
