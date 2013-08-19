@@ -1,1 +1,1 @@
-require 'outliers/filters/aws/tags'
+require 'outliers/filters/aws/ec2'

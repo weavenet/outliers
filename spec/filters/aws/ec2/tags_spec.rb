@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Outliers::Filters::Aws::Tags do
+describe Outliers::Filters::Aws::Ec2::Tags do
   subject do
     object = Object.new
-    object.extend Outliers::Filters::Aws::Tags
+    object.extend Outliers::Filters::Aws::Ec2::Tags
     object
   end
 

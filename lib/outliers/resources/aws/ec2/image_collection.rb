@@ -4,7 +4,7 @@ module Outliers
       module Ec2
         class ImageCollection < Collection
 
-          include Outliers::Filters::Aws::Tags
+          include Outliers::Filters::Aws::Ec2::Tags
 
           def load_all
             logger.debug "Loading private images owned by this account."
@@ -12,7 +12,7 @@ module Outliers
           end
 
           def self.filters
-            Outliers::Filters::Aws::Tags.filters
+            Outliers::Filters::Aws::Ec2::Tags.filters
           end 
 
         end
