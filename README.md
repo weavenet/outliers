@@ -9,8 +9,8 @@ Outliers is a framework for verifying configuration of resources.
 * Applications and teams rely on multiple service providers (AWS, etc).
 * Providers deliver like resources with complex configuration (EC2 Instances, S3 Buckets, etc).
 * Resource configuration can be verified (launched from given AMI, contain private objects, etc).
-* The resources can be included or excluded by their ID (Instance ID, Object Key, etc).
-* Resources can be included in the list by matching a filter (Instance has tag 'x' with value 'y').
+* Resources can be targeted or excluded by their ID (Instance ID, Object Key, etc).
+* Resources can be targeted or excluded by matching a filter (Instance has tag 'x' with value 'y').
 * Those not passing verifications, are flagged as Outliers.
 
 ## Requirements
