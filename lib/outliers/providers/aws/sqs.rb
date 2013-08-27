@@ -10,7 +10,7 @@ module Outliers
         end
 
         def connect
-          logger.info "Connecting to region '#{@region}'." unless @sqs
+          logger.debug "Connecting to region '#{@region}'." unless @sqs
           @sqs ||= ::AWS::SQS.new config
         end
 

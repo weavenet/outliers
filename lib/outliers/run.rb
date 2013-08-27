@@ -24,15 +24,13 @@ module Outliers
 
     def evaluate(name='unspecified', &block)
       if Thread.list.count > thread_count
-        logger.debug "Maximum concurrent evaluations running, sleeping"
-        sleep 2
+        logger.debug "Maximum concurrent evaluations running, sleeping."
+        sleep thread_count * 2
       end
+
       evaluation = Proc.new { Evaluation.new(:name => name, :run => self).instance_eval &block }
-      if threaded
-        threads << Thread.new { evaluation.call }
-      else
-        evaluation.call
-      end
+
+      threaded ? threads << Thread.new { evaluation.call } : evaluation.call
     end
 
     def passed
