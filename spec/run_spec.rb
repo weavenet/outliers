@@ -26,19 +26,55 @@ describe Outliers::Run do
       subject.should_receive(:instance_eval).with(evaluation2)
       subject.process_evaluations_in_dir
     end
+
+    it "should verify all threads complete"
   end
 
   describe "#evaluate" do
-    it "should kick off a new evaluation and pass the block for execuation" do
-      Outliers::Evaluation.should_receive(:new).with(:name => 'my evaluation', :run => subject).and_return evaluation1
-      evaluation1.should_receive(:connect).with('test')
-      subject.evaluate 'my evaluation' do
-        connect 'test'
+    context "with name" do
+      before do
+        Outliers::Evaluation.should_receive(:new).with(:name => 'my evaluation', :run => subject).
+          and_return evaluation1
+        evaluation1.should_receive(:connect).with('test')
+      end
+
+      it "should kick off a new evaluation and pass the block for execuation" do
+        subject.evaluate 'my evaluation' do
+          connect 'test'
+        end
+      end
+
+      it "should sleep if more than thread_count threads running" do
+        list_stub = stub "list"
+        list_stub.stub(:count).and_return(6,1)
+        Thread.stub :list => list_stub
+        subject.should_receive(:sleep).with(2)
+        subject.evaluate 'my evaluation' do
+          connect 'test'
+        end
+      end
+
+      describe "testing threads" do
+        it "should kick off a new thread if threaded is set to true" do
+          subject.threaded = true
+          subject.evaluate 'my evaluation' do
+            connect 'test'
+          end
+          subject.threads.count == 1
+        end
+
+        it "should not kick off a new thread if threaded is set to false" do
+          subject.evaluate 'my evaluation' do
+            connect 'test'
+          end
+          subject.threads.count == 0
+        end
       end
     end
 
     it "should kick off a new evaluation with unspecified name" do
-      Outliers::Evaluation.should_receive(:new).with(:name => 'unspecified', :run => subject).and_return evaluation1
+      Outliers::Evaluation.should_receive(:new).with(:name => 'unspecified', :run => subject).
+        and_return evaluation1
       evaluation1.should_receive(:connect).with('test')
       subject.evaluate do
         connect 'test'
