@@ -9,7 +9,12 @@ module Outliers
         Outliers.config_path @options[:directory]
 
         @logger = Outliers.logger
-        @run    = Run.new concurrent: @options[:concurrent]
+        @run    = Run.new
+
+        if @options[:concurrent]
+          @run.threaded = true
+          @run.threads  = @options[:concurrent]
+        end
 
         begin
           @run.credentials = Credentials.load_from_file "#{ENV['HOME']}/.outliers.yml"

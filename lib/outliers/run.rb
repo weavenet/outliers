@@ -6,7 +6,7 @@ module Outliers
       @results      = []
       @threaded     = false
       @threads      = []
-      @thread_count = options[:concurrent] || 5
+      @thread_count = options[:concurrent] || 1
       Thread.abort_on_exception = true
     end
 

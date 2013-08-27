@@ -57,6 +57,7 @@ describe Outliers::Run do
       describe "testing threads" do
         it "should kick off a new thread if threaded is set to true" do
           subject.threaded = true
+          Thread.should_receive(:new) { 'a thread' }
           subject.evaluate 'my evaluation' do
             connect 'test'
           end
