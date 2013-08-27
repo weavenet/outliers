@@ -9,11 +9,11 @@ module Outliers
         Outliers.config_path @options[:directory]
 
         @logger = Outliers.logger
-        @run    = Run.new
+        @run    = Run.new concurrent: @options[:concurrent]
 
         begin
           @run.credentials = Credentials.load_from_file "#{ENV['HOME']}/.outliers.yml"
-          @run.process_evaluations_in_config_folder
+          @run.process_evaluations_in_dir
         rescue Outliers::Exceptions::Base => e
           @logger.error e.message
           exit 1
@@ -47,6 +47,10 @@ module Outliers
       def option_parser
         OptionParser.new do |opts|
           opts.banner = "Usage: outliers process [options]"
+
+          opts.on("-c", "--concurrent [CONCURRENT]", "Maximum number of evaluations to run concurrently.") do |o|
+            @options[:concurrent] = o.to_i
+          end
 
           opts.on("-d", "--directory [DIRECTORY]", "Directory containing evaluations to load.") do |o|
             @options[:directory] = o
