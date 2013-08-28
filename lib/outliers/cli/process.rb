@@ -2,7 +2,7 @@ module Outliers
   module CLI
     class Process
       def process
-        @options = {}
+        @options = { concurrent: 1 }
 
         option_parser.parse!
 
@@ -11,9 +11,9 @@ module Outliers
         @logger = Outliers.logger
         @run    = Run.new
 
-        if @options[:concurrent]
-          @run.threaded = true
-          @run.threads  = @options[:concurrent]
+        if @options[:concurrent] > 1
+          @run.threaded     = true
+          @run.thread_count = @options[:threads]
         end
 
         begin
@@ -53,8 +53,8 @@ module Outliers
         OptionParser.new do |opts|
           opts.banner = "Usage: outliers process [options]"
 
-          opts.on("-c", "--concurrent [CONCURRENT]", "Maximum number of evaluations to run concurrently.") do |o|
-            @options[:concurrent] = o.to_i
+          opts.on("-t", "--threads [THREADS]", "Maximum number of evaluations threads to run concurrently (Default: 1).") do |o|
+            @options[:threads] = o.to_i
           end
 
           opts.on("-d", "--directory [DIRECTORY]", "Directory containing evaluations to load.") do |o|

@@ -1,18 +1,16 @@
 module Outliers
   class Run
-    attr_accessor :credentials, :results, :threaded, :threads
+    attr_accessor :credentials, :results, :threads, :threaded, :thread_count
 
     def initialize(options={})
       @results      = []
       @threaded     = false
       @threads      = []
-      @thread_count = options[:concurrent] || 1
+      @thread_count = 1
       Thread.abort_on_exception = true
     end
 
     def process_evaluations_in_dir
-      multi_thread
-
       files.each do |file|
         next if File.directory? file
         next if File.extname(file) != '.rb'
@@ -20,13 +18,15 @@ module Outliers
         self.instance_eval File.read(file)
       end
 
-      threads.each {|t| t.join}
+      threads.each {|t| t.join} if threaded
     end
 
     def evaluate(name='unspecified', &block)
-      while Thread.list.count > thread_count
-        logger.info "Maximum concurrent evaluations running, sleeping."
-        sleep 2
+      if threaded
+        while Thread.list.count > thread_count
+          logger.info "Maximum concurrent threads running, sleeping."
+          sleep 2
+        end
       end
 
       evaluation = Proc.new { Evaluation.new(:name => name, :run => self).instance_eval &block }
@@ -44,17 +44,9 @@ module Outliers
 
     private
 
-    def multi_thread
-      @threaded = true
-    end
-
     def files
       evaluations_path = File.join Outliers.config_path
       files = Dir.glob File.join(evaluations_path, '**', '*')
-    end
-
-    def thread_count
-      @thread_count
     end
 
     def logger
