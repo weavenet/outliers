@@ -9,8 +9,8 @@ describe Outliers::Run do
     Outliers.config_path '/test'
   end
 
-  describe "#process_evaluations_in_config_folder" do
-    it "should process all .rb files in config folder and sub folders" do
+  describe "#process_evaluations_in_dir" do
+    before do
       files = ['/test/test1.rb', '/test/dir', '/test/dir/test2.rb', '/test/dir/test_other_file']
       Dir.should_receive(:glob).with('/test/**/*').and_return files
 
@@ -21,24 +21,71 @@ describe Outliers::Run do
 
       File.should_receive(:read).with('/test/test1.rb').and_return evaluation1
       File.should_receive(:read).with('/test/dir/test2.rb').and_return evaluation2
- 
+    end
+
+    it "should process all .rb files in config folder and sub folders" do
       subject.should_receive(:instance_eval).with(evaluation1)
       subject.should_receive(:instance_eval).with(evaluation2)
-      subject.process_evaluations_in_config_folder
+      subject.process_evaluations_in_dir
+    end
+
+    it "each thread created for an evaluation should be re-joined" do
+      thread_mock = mock 'thread'
+      subject.threaded = true
+      subject.threads = [thread_mock]
+      subject.should_receive(:instance_eval).with(evaluation1)
+      subject.should_receive(:instance_eval).with(evaluation2)
+      thread_mock.should_receive(:join)
+      subject.process_evaluations_in_dir
     end
   end
 
   describe "#evaluate" do
-    it "should kick off a new evaluation and pass the block for execuation" do
-      Outliers::Evaluation.should_receive(:new).with(:name => 'my evaluation', :run => subject).and_return evaluation1
-      evaluation1.should_receive(:connect).with('test')
-      subject.evaluate 'my evaluation' do
-        connect 'test'
+    context "with name" do
+      before do
+        Outliers::Evaluation.should_receive(:new).with(:name => 'my evaluation', :run => subject).
+          and_return evaluation1
+        evaluation1.should_receive(:connect).with('test')
+      end
+
+      it "should kick off a new evaluation and pass the block for execuation" do
+        subject.evaluate 'my evaluation' do
+          connect 'test'
+        end
+      end
+
+      it "should sleep if more than thread_count threads running" do
+        list_stub = stub "list"
+        list_stub.stub(:count).and_return(6,1)
+        Thread.stub :list => list_stub
+        subject.should_receive(:sleep).with(2)
+        subject.evaluate 'my evaluation' do
+          connect 'test'
+        end
+      end
+
+      describe "testing threads" do
+        it "should kick off a new thread if threaded is set to true" do
+          subject.threaded = true
+          Thread.should_receive(:new).and_yield { 'a thread' }
+          subject.evaluate 'my evaluation' do
+            connect 'test'
+          end
+          subject.threads.count == 1
+        end
+
+        it "should not kick off a new thread if threaded is set to false" do
+          subject.evaluate 'my evaluation' do
+            connect 'test'
+          end
+          subject.threads.count == 0
+        end
       end
     end
 
     it "should kick off a new evaluation with unspecified name" do
-      Outliers::Evaluation.should_receive(:new).with(:name => 'unspecified', :run => subject).and_return evaluation1
+      Outliers::Evaluation.should_receive(:new).with(:name => 'unspecified', :run => subject).
+        and_return evaluation1
       evaluation1.should_receive(:connect).with('test')
       subject.evaluate do
         connect 'test'

@@ -2,7 +2,7 @@ module Outliers
   module CLI
     class Process
       def process
-        @options = {}
+        @options = { threads: 1 }
 
         option_parser.parse!
 
@@ -11,9 +11,14 @@ module Outliers
         @logger = Outliers.logger
         @run    = Run.new
 
+        if @options[:threads] > 1
+          @run.threaded     = true
+          @run.thread_count = @options[:threads]
+        end
+
         begin
           @run.credentials = Credentials.load_from_file "#{ENV['HOME']}/.outliers.yml"
-          @run.process_evaluations_in_config_folder
+          @run.process_evaluations_in_dir
         rescue Outliers::Exceptions::Base => e
           @logger.error e.message
           exit 1
@@ -26,7 +31,7 @@ module Outliers
 
         @run.failed.each do |f|
           @logger.info "Evaluation '#{f.evaluation}' verification '#{f.verification}' of '#{f.resource}' failed."
-          @logger.debug "Failing resource IDs '#{f.failing_resources.map{|r| r.id}.join(', ')}'"
+          @logger.info "Failing resource IDs '#{f.failing_resources.map{|r| r.id}.join(', ')}'"
         end
 
         @logger.info "(#{failed} evaluations failed, #{passed} evaluations passed.)"
@@ -47,6 +52,10 @@ module Outliers
       def option_parser
         OptionParser.new do |opts|
           opts.banner = "Usage: outliers process [options]"
+
+          opts.on("-t", "--threads [THREADS]", "Maximum number of evaluations threads to run concurrently (Default: 1).") do |o|
+            @options[:threads] = o.to_i
+          end
 
           opts.on("-d", "--directory [DIRECTORY]", "Directory containing evaluations to load.") do |o|
             @options[:directory] = o
