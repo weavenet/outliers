@@ -10,7 +10,7 @@ describe Outliers::Run do
   end
 
   describe "#process_evaluations_in_dir" do
-    it "should process all .rb files in config folder and sub folders" do
+    before do
       files = ['/test/test1.rb', '/test/dir', '/test/dir/test2.rb', '/test/dir/test_other_file']
       Dir.should_receive(:glob).with('/test/**/*').and_return files
 
@@ -21,13 +21,23 @@ describe Outliers::Run do
 
       File.should_receive(:read).with('/test/test1.rb').and_return evaluation1
       File.should_receive(:read).with('/test/dir/test2.rb').and_return evaluation2
- 
+    end
+
+    it "should process all .rb files in config folder and sub folders" do
       subject.should_receive(:instance_eval).with(evaluation1)
       subject.should_receive(:instance_eval).with(evaluation2)
       subject.process_evaluations_in_dir
     end
 
-    it "should verify all threads complete"
+    it "each thread created for an evaluation should be re-joined" do
+      thread_mock = mock 'thread'
+      subject.threaded = true
+      subject.threads = [thread_mock]
+      subject.should_receive(:instance_eval).with(evaluation1)
+      subject.should_receive(:instance_eval).with(evaluation2)
+      thread_mock.should_receive(:join)
+      subject.process_evaluations_in_dir
+    end
   end
 
   describe "#evaluate" do
@@ -49,7 +59,6 @@ describe Outliers::Run do
         list_stub.stub(:count).and_return(6,1)
         Thread.stub :list => list_stub
         subject.should_receive(:sleep).with(2)
-        #subject.threaded = true
         subject.evaluate 'my evaluation' do
           connect 'test'
         end
