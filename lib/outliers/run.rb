@@ -18,15 +18,13 @@ module Outliers
         self.instance_eval File.read(file)
       end
 
-      threads.each {|t| t.join} if threaded
+      threads.each {|t| t.join}
     end
 
     def evaluate(name='unspecified', &block)
-      if threaded
-        while Thread.list.count > thread_count
-          logger.info "Maximum concurrent threads running, sleeping."
-          sleep 2
-        end
+      while Thread.list.count > thread_count
+        logger.info "Maximum concurrent threads running, sleeping."
+        sleep 2
       end
 
       evaluation = Proc.new { Evaluation.new(:name => name, :run => self).instance_eval &block }

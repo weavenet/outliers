@@ -49,7 +49,7 @@ describe Outliers::Run do
         list_stub.stub(:count).and_return(6,1)
         Thread.stub :list => list_stub
         subject.should_receive(:sleep).with(2)
-        subject.threaded = true
+        #subject.threaded = true
         subject.evaluate 'my evaluation' do
           connect 'test'
         end
