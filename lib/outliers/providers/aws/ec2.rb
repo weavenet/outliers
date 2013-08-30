@@ -10,7 +10,7 @@ module Outliers
         end
 
         def connect
-          logger.info "Connecting to region '#{@region}'." unless @ec2
+          logger.debug "Connecting to region '#{@region}'." unless @ec2
           @ec2 ||= ::AWS::EC2.new config
         end
 

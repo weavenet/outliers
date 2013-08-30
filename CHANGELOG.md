@@ -1,3 +1,7 @@
+## HEAD
+
+* Support running multiple evaluation threads
+
 ## 0.2.0
 
 * Added filters

@@ -10,7 +10,7 @@ module Outliers
         end
 
         def connect
-          logger.info "Connecting to region '#{@region}'." unless @rds
+          logger.debug "Connecting to region '#{@region}'." unless @rds
           @rds ||= ::AWS::RDS.new config
         end
 

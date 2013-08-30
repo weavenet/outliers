@@ -10,7 +10,7 @@ module Outliers
         end
 
         def connect
-          logger.info "Connecting to region '#{@region}'." unless @cf
+          logger.debug "Connecting to region '#{@region}'." unless @cf
           @cf ||= ::AWS::CloudFormation.new config
         end
 
