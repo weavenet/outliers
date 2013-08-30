@@ -3,10 +3,10 @@ module Outliers
     attr_accessor :credentials, :results, :threads, :threaded, :thread_count
 
     def initialize(options={})
-      @results      = []
-      @threaded     = false
-      @threads      = []
-      @thread_count = 1
+      @results                  = []
+      @threads                  = []
+      @threaded                 = false
+      @thread_count             = 1
       Thread.abort_on_exception = true
     end
 

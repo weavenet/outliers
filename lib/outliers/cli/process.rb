@@ -2,7 +2,7 @@ module Outliers
   module CLI
     class Process
       def process
-        @options = { concurrent: 1 }
+        @options = { threads: 1 }
 
         option_parser.parse!
 
@@ -11,7 +11,7 @@ module Outliers
         @logger = Outliers.logger
         @run    = Run.new
 
-        if @options[:concurrent] > 1
+        if @options[:threads] > 1
           @run.threaded     = true
           @run.thread_count = @options[:threads]
         end
