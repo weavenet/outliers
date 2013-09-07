@@ -7,22 +7,6 @@ module Outliers
             'instance_id'
           end
 
-          def self.verifications
-            [
-              { name: 'classic',
-                description: 'Instance is in AWS Classic (No VPC).' },
-              { name: 'source_dest_check',
-                description: 'Instance source dest check set to true.' },
-              { name: 'running',
-                description: 'Instance status is running.' },
-              { name: 'valid_image_id',
-                description: 'ami_ids=ami_id1,ami_id2 - Instances Image ID (AMI) is in given list.',
-                args: 'image_ids: [IMAGE_ID1, IMAGEID2]' },
-              { name: 'vpc',
-                description: 'Instance is in a VPC.' }
-            ]
-          end
-
           def classic?
             !vpc?
           end

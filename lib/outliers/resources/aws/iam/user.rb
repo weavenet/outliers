@@ -3,16 +3,6 @@ module Outliers
     module Aws
       module Iam
         class User < Resource
-          def self.verifications
-            [
-              { name: 'mfa_enabled',
-                description: 'Verify MFA enabled for user.' },
-              { name: 'no_access_keys',
-                description: 'Verify user has no access keys.' },
-              { name: 'no_password_set',
-                description: 'Verify password not set for user.' }
-            ]
-          end
 
           def no_access_keys?
             logger.debug "#{id} has #{access_keys.count} access key(s)."

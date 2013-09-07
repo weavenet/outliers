@@ -12,18 +12,6 @@ module Outliers
         list.reject {|r| keys.include? r.id}
       end
 
-      module_function
-
-      def verifications
-         [
-           { name: 'none_exist',
-             description: 'Verify no resources exist.' },
-           { name: 'equals',
-             description: 'Verify resources match the given list of keys.',
-             args: 'keys: [KEY1,KEY2]' }
-         ]
-      end
-
     end
   end
 end

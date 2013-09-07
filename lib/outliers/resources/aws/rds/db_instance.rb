@@ -7,16 +7,6 @@ module Outliers
             'db_instance_identifier'
           end
 
-          def self.verifications
-            [ 
-              { name: 'backup_retention_period',
-                description: 'Validate the backup retention period equals given days for the db_instance.',
-                args: 'days: DAYS' },
-              { name: 'multi_az',
-                description: 'RDS Multi AZ set to yes.' }
-            ]
-          end
-
           def backup_retention_period?(args)
             days = args[:days]
 
