@@ -3,13 +3,13 @@ module Outliers
     module Shared
 
       def none_exist?
-        all
+        list
       end
 
       def equals?(args)
-        list = Array(args[:keys])
-        logger.debug "Verifying '#{list.join(',')}' equals '#{all.empty? ? 'no resources' : all_by_key.join(',')}'."
-        all.reject {|r| list.include? r.id}
+        keys = Array(args[:keys])
+        logger.debug "Verifying '#{list.join(',')}' equals '#{list.empty? ? 'no resources' : list_by_key.join(',')}'."
+        list.reject {|r| keys.include? r.id}
       end
 
       module_function
