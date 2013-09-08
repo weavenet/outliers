@@ -1,4 +1,4 @@
-require 'outliers/providers/aws/base'
+require 'outliers/providers/aws/shared'
 
 require 'outliers/providers/aws/cloud_formation'
 require 'outliers/providers/aws/ec2'
