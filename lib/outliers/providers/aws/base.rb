@@ -20,11 +20,9 @@ module Outliers
         module_function
 
         def credential_arguments
-          {
-            'access_key_id'     => 'AWS Account Access Key',
+          { 'access_key_id'     => 'AWS Account Access Key',
             'secret_access_key' => 'AWS Account Secret Key',
-            'region'            => 'AWS Region (Default us-east-1)'
-          }
+            'region'            => 'AWS Region (Default us-east-1)' }
         end
 
       end
