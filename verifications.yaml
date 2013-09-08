@@ -1,9 +1,10 @@
-shared:
-  none_exist:
-    description: Verify no resources exist in list.
-  equals:
-    description: Verify no resources match the given list of keys.
-    args: 'keys: [KEY1,KEY2]'
+all:
+  shared:
+    none_exist:
+      description: Verify no resources exist in list.
+    equals:
+      description: Verify no resources match the given list of keys.
+      args: 'keys: [KEY1,KEY2]'
 
 aws_ec2:
   instance:
@@ -20,12 +21,12 @@ aws_ec2:
       description: Instance is in a VPC.
   security_group:
     no_public_internet_ingress:
-      description: 'Security Group has no rules open to "0.0.0.0/0".'
+      description: Security Group has no rules open to 0.0.0.0/0.
 
 aws_elb:
   load_balancer:
     ssl_certificates_valid:
-      description: 'Validates all SSL certificates associated with an ELB are valid for given number of days.'
+      description: Validates all SSL certificates associated with an ELB are valid for given number of days.
       args: 'days: DAYS'
 
 aws_iam:
