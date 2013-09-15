@@ -21,7 +21,7 @@ aws_cloud_formation:
   resources:
     stack:
       description: AWS Cloud Formation Stack
-      verifications:
+      verifications: {}
 
 aws_ec2:
   credentials:
@@ -50,7 +50,7 @@ aws_ec2:
           description: Security Group has no rules open to 0.0.0.0/0.
     image:
       description: AWS EC2 AMI
-      verifications:
+      verifications: {}
 
 aws_elb:
   credentials:
@@ -97,6 +97,7 @@ aws_rds:
           description: RDS Multi AZ set to yes.
     db_snapshot:
       description: AWS RDS Database Snapshot
+      verifications: {}
 
 aws_s3:
   credentials:
@@ -124,4 +125,4 @@ aws_sqs:
   resources:
     queue:
       description: AWS SQS Queue
-      verifications:
+      verifications: {}
