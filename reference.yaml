@@ -1,18 +1,3 @@
-all:
-  credentials:
-    access_key_id: AWS Account Access Key
-    secret_access_key: AWS Account Secret Key
-    region: AWS Region (Default us-east-1)
-  resources:
-    shared:
-      description: Verifications which are available to all resources.
-      verifications:
-        none_exist:
-          description: Verify no resources exist in list.
-        equals:
-          description: Verify no resources match the given list of keys.
-          args: 'keys: [KEY1,KEY2]'
-
 aws_cloud_formation:
   credentials:
     access_key_id: AWS Account Access Key
