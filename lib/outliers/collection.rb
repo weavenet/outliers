@@ -37,15 +37,15 @@ module Outliers
     end
 
     def each &block  
-      all.each do |resource|
+      list.each do |resource|
         block.call resource
       end  
     end
 
     def exclude_by_key(exclusions)
       @logger.info "Excluding the following resources: '#{exclusions.join(',')}'."
-      save = all.reject {|u| exclusions.include? u.public_send key}
-      @all = save
+      save = list.reject {|u| exclusions.include? u.public_send key}
+      @list = save
     end
 
     def filter(args)
@@ -62,18 +62,18 @@ module Outliers
 
       logger.warn "No resources match filter." unless filtered_list.any?
 
-      @all = filtered_list
+      @list = filtered_list
     end
 
     def verify(name, arguments={})
       name << "?" unless name =~ /^.*\?$/
 
-      unless all.any?
+      unless list.any?
         return { failing_resources: [], passing_resources: [] }
       end
 
       logger.info "Verifying '#{name}'."
-      logger.debug "Target resources '#{all_by_key.join(', ')}'."
+      logger.debug "Target resources '#{list_by_key.join(', ')}'."
 
       unless verification_exists? name
         raise Exceptions::UnknownVerification.new "Unkown verification '#{name}'."
@@ -86,8 +86,8 @@ module Outliers
       end
     end
 
-    def all
-      @all ||= load_all
+    def list
+      @list ||= load_all
     end
 
     def key
@@ -107,8 +107,8 @@ module Outliers
       m.include? name.to_sym
     end
 
-    def all_by_key
-      all.map {|r| r.public_send key}
+    def list_by_key
+      list.map {|r| r.public_send key}
     end
 
     def connect
@@ -126,13 +126,13 @@ module Outliers
     def set_target_resources(verification)
       logger.info "Verifying target '#{targets.join(', ')}'."
 
-      @all = all.select {|r| targets.include? r.id }
+      @list = list.select {|r| targets.include? r.id }
 
-      unless all.any?
+      unless list.any?
         raise Outliers::Exceptions::TargetNotFound.new "No resources found matching one or more of '#{targets}'."
       end
 
-      @all
+      @list
     end
 
     def send_resources_verification(verification, arguments)
@@ -143,12 +143,12 @@ module Outliers
         logger.debug "Verification of resource '#{resource.id}' #{result ? 'passed' : 'failed'}."
         result
       end
-      { failing_resources: failing_resources, passing_resources: all - failing_resources }
+      { failing_resources: failing_resources, passing_resources: list - failing_resources }
     end
 
     def send_collection_verification(verification, arguments)
       failing_resources = send_verification(self, verification, arguments)
-      { failing_resources: failing_resources, passing_resources: all - failing_resources }
+      { failing_resources: failing_resources, passing_resources: list - failing_resources }
     end
 
     def send_verification(object, verification, arguments) 

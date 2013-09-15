@@ -3,13 +3,6 @@ module Outliers
     module Aws
       module Elb
         class LoadBalancer < Resource
-          def self.verifications
-            [
-              { name: 'ssl_certificates_valid',
-                description: 'Validates all SSL certificates associated with an ELB are valid for given number of days',
-                args: 'days: DAYS' }
-            ]
-          end
 
           def ssl_certificates_valid?(args)
             days = args[:days]

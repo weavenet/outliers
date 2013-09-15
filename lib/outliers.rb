@@ -3,6 +3,7 @@ require "outliers/verifications"
 
 require "outliers/collection"
 require "outliers/credentials"
+require "outliers/info"
 require "outliers/exceptions"
 require "outliers/evaluation"
 require "outliers/filters"

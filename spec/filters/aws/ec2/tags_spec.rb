@@ -15,7 +15,7 @@ describe Outliers::Filters::Aws::Ec2::Tags do
 
   before do
     subject.stub :logger => logger
-    subject.stub :all => [resource1, resource2]
+    subject.stub :list => [resource1, resource2]
   end
 
   it "should return the list of instances filtered by the given tag name and value" do

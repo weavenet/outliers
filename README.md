@@ -47,55 +47,9 @@ Multiple accounts can be specified, to add a prod and preprod AWS account:
 
 Depending on the provider, different keys and values are required.
 
-For a list of providers:
-
-    outliers providers
-
 ## Usage
 
-Outliers can be used in two modes, as a **CLI** or a **DSL**.
-
-The CLI is good for testing and quick verifications.
-
-The DSL can be used to build up comprehensive list of verifications for a project or company.
-
-### CLI
-
-To verify all EC2 instances are in a VPC:
-
-    outliers evaluate -c aws_prod -p aws_ec2 -r instance -v vpc
-
-Credential keys can be overriden. To specify region us-west-1.
-
-    outliers evaluate -c aws_prod -p aws_ec2 -r instance -v vpc -c region=us-west-1
-
-Verifications may require arguments. To verify your RDS databases have a 2 day retention period:
-
-    outliers evaluate -c aws_prod -p aws_rds -r db_instance -v backup_retention_period -a days=2
-
-Verifications may accept multiple values for an argument. Values are separated by commas.
-
-To verify EC2 instances are launched from a list of known images:
-
-    outliers evaluate -c aws_prod -p aws_ec2 -r instance -v valid_image_id -a image_ids=ami-12345678,ami-87654321
-
-To only target a specific resource:
-
-    outliers evaluate -c aws_prod -p aws_ec2 -r instance -t i-87654321
-
-To exclude resources that are known exceptions:
-
-    outliers evaluate -c aws_prod -p aws_ec2 -r instance -e i-12345678
-
-Resources have attributes which can be used to filter target resources.
-
-To filter instances who have tag 'Name' equal to 'web'.
-
-    outliers evaluate -c aws_prod -p aws_ec2 -r instance -f 'tag=Name:web'
-
-### DSL
-
-To run Outliers as a DSL
+Outlier's DSL can be used to build up comprehensive list of verifications for a project or application.
 
 * Create a directory to store your evaluations. 
 * Evalutions are read from from files within the directory.
@@ -207,24 +161,6 @@ To filter instances who have tag 'Name' equal to 'web'.
       filter tag: 'Name:web'
       verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
     end
-
-### Help
-
-For a list of providers and required credentials:
-
-    outliers providers
-
-For a list of resources, and available verifications, for a given provider:
-
-    outliers resources -p PROVIDER_NAME
-
-For a fule list of commands run:
-
-    outliers -h
-
-For full help on a command, append -h:
-
-    outliers evaluate -h
 
 ## Contributing
 

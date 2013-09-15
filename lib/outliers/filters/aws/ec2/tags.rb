@@ -8,7 +8,7 @@ module Outliers
             tag_name  = value.split(':').first
             tag_value = value.split(':').last
             logger.info "Filtering by tag '#{tag_name}' equals '#{tag_value}'."
-            all.select do |r|
+            list.select do |r|
               if r.tags.has_key? tag_name
                 value = r.tags[tag_name]
                 result = value == tag_value
