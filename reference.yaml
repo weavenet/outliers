@@ -1,0 +1,128 @@
+all:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    shared:
+      description: Verifications which are available to all resources.
+      verifications:
+        none_exist:
+          description: Verify no resources exist in list.
+        equals:
+          description: Verify no resources match the given list of keys.
+          args: 'keys: [KEY1,KEY2]'
+
+aws_cloud_formation:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    stack:
+      description: AWS Cloud Formation Stack
+      verifications: {}
+
+aws_ec2:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    instance:
+      description: AWS EC2 Instance
+      verifications:
+        classic:
+          description: Instance is in AWS Classic (No VPC).
+        source_dest_check:
+          description: Instance source dest check set to true.
+        running:
+          description: Instance status is running.
+        valid_image_id:
+          description: ami_ids=ami_id1,ami_id2 - Instances Image ID (AMI) is in given list.
+          args: 'image_ids: [IMAGE_ID1, IMAGEID2]'
+        vpc:
+          description: Instance is in a VPC.
+    security_group:
+      description: AWS EC2 Security Group
+      verifications:
+        no_public_internet_ingress:
+          description: Security Group has no rules open to 0.0.0.0/0.
+    image:
+      description: AWS EC2 AMI
+      verifications: {}
+
+aws_elb:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    load_balancer:
+      description: AWS ELB (Elastic Load Balancer)
+      verifications:
+        ssl_certificates_valid:
+          description: Validates all SSL certificates associated with an ELB are valid for given number of days.
+          args: 'days: DAYS'
+
+aws_iam:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    user:
+      description: AWS IAM User
+      verifications:
+        mfa_enabled:
+          description: Verify MFA enabled for user.
+        no_access_keys:
+          description: Verify user has no access keys.
+        no_password_set:
+          description: Verify password not set for user.
+
+aws_rds:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    db_instance:
+      description: AWS RDS Database Instance
+      verifications:
+        backup_retention_period:
+          description: Validate the backup retention period equals given days for the db_instance.
+          args: 'days: DAYS'
+        multi_az:
+          description: RDS Multi AZ set to yes.
+    db_snapshot:
+      description: AWS RDS Database Snapshot
+      verifications: {}
+
+aws_s3:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    bucket:
+      description: AWS S3 Bucket
+      verifications:
+        empty:
+          description: Bucket has no objects.
+        no_public_objects:
+          description: Bucket has no public accessible objects.
+        configured_as_website:
+          description: Bucket is configured as a website.
+        not_configured_as_website:
+          description: Bucket is not configured as a website.
+
+aws_sqs:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    queue:
+      description: AWS SQS Queue
+      verifications: {}

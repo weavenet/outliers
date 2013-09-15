@@ -31,7 +31,7 @@ describe Outliers::Collection do
   context "#exclude" do
     it "should exclude the given array of resources" do
       subject.exclude_by_key ['resource1']
-      expect(subject.all).to eq([resource2])
+      expect(subject.list).to eq([resource2])
     end
   end
 
@@ -39,7 +39,7 @@ describe Outliers::Collection do
     it "should apply the given filter to resources" do
       subject.should_receive('filter_tag').with('Name:test123').and_return [resource1]
       subject.filter 'tag' => 'Name:test123'
-      expect(subject.all).to eq([resource1])
+      expect(subject.list).to eq([resource1])
     end
 
     it "should raise an exception if the filter does not exist" do
@@ -120,7 +120,7 @@ describe Outliers::Collection do
         to raise_error(Outliers::Exceptions::NoArgumentRequired)
     end
 
-    it "should return empty passing and failing arrays if no resources exist in all" do
+    it "should return empty passing and failing arrays if no resources exist in list" do
       subject.stub :load_all => []
       expect(subject.verify 'valid_resource?', {}).to eq( { failing_resources: [], passing_resources: [] } )
     end

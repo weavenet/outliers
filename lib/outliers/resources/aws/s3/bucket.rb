@@ -4,19 +4,6 @@ module Outliers
       module S3
         class Bucket < Resource
 
-          def self.verifications
-            [
-              { name: 'empty',
-                description: 'Bucket has no objects.' },
-              { name: 'no_public_objects',
-                description: 'Bucket has no public accessible objects.' },
-              { name: 'configured_as_website',
-                description: 'Bucket is configured as a website.' },
-              { name: 'not_configured_as_website',
-                description: 'Bucket is not configured as a website.' }
-            ]
-          end
-
           def empty?
             logger.debug "Bucket #{id} has #{count} objects."
 

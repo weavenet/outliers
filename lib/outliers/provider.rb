@@ -14,10 +14,6 @@ module Outliers
       (self.to_s.split('::') - ['Outliers', 'Providers']).map { |p| p.underscore }.join('_').downcase
     end
 
-    def self.credential_arguments
-      {}
-    end
-
     def initialize(credentials)
       @credentials = credentials
       @logger      = Outliers.logger

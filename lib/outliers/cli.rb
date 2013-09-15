@@ -1,9 +1,6 @@
 require 'optparse'
 
-require 'outliers/cli/evaluate'
 require 'outliers/cli/process'
-require 'outliers/cli/providers'
-require 'outliers/cli/resources'
 
 module Outliers
   module CLI
@@ -12,30 +9,9 @@ module Outliers
       cmd = ARGV.shift
 
       case cmd
-      when 'evaluate'
-        begin
-          CLI::Evaluate.new.evaluate
-        rescue OptionParser::MissingArgument => e
-          puts e.message
-          exit 1
-        end
-      when 'providers'
-        begin
-          CLI::Providers.new.providers
-        rescue OptionParser::MissingArgument => e
-          puts e.message
-          exit 1
-        end
       when 'process'
         begin
           CLI::Process.new.process
-        rescue OptionParser::MissingArgument => e
-          puts e.message
-          exit 1
-        end
-      when 'resources'
-        begin
-          CLI::Resources.new.resources
         rescue OptionParser::MissingArgument => e
           puts e.message
           exit 1
