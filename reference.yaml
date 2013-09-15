@@ -1,4 +1,8 @@
 all:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
   resources:
     shared:
       description: Verifications which are available to all resources.
@@ -10,6 +14,10 @@ all:
           args: 'keys: [KEY1,KEY2]'
 
 aws_ec2:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
   resources:
     instance:
       description: AWS EC2 Instance
@@ -32,6 +40,10 @@ aws_ec2:
           description: Security Group has no rules open to 0.0.0.0/0.
 
 aws_elb:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
   resources:
     load_balancer:
       description: AWS ELB (Elastic Load Balancer)
@@ -41,6 +53,10 @@ aws_elb:
           args: 'days: DAYS'
 
 aws_iam:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
   resources:
     user:
       description: AWS IAM User
@@ -53,6 +69,10 @@ aws_iam:
           description: Verify password not set for user.
 
 aws_rds:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
   resources:
     db_instance:
       description: AWS RDS Database Instance
@@ -64,6 +84,10 @@ aws_rds:
           description: RDS Multi AZ set to yes.
 
 aws_s3:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
   resources:
     bucket:
       description: AWS S3 Bucket

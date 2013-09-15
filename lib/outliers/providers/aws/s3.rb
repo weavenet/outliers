@@ -5,10 +5,6 @@ module Outliers
 
         include Shared
 
-        def self.credential_arguments
-          Shared.credential_arguments
-        end
-
         def connect
           logger.debug "Connecting to region '#{@region}'." unless @iam
           @iam ||= ::AWS::S3.new config
