@@ -12,7 +12,7 @@ describe Outliers::Info do
     end
 
     it "should be able to load reference.yaml" do
-      expect(subject.reference.keys.include?('all')).to be_true
+      expect(subject.reference.keys.count > 0).to be_true
     end
 
     it "should verify each provider class has a entry in reference.yaml" do
