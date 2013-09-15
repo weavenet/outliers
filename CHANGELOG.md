@@ -1,5 +1,9 @@
 ## HEAD
 
+## 0.3.0
+
+* Remove CLI support
+* Pull resource and provider info from reference.yaml
 * Support running multiple evaluation threads
 
 ## 0.2.0
