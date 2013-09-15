@@ -13,6 +13,16 @@ all:
           description: Verify no resources match the given list of keys.
           args: 'keys: [KEY1,KEY2]'
 
+aws_cloud_formation:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    stack:
+      description: AWS Cloud Formation Stack
+      verifications:
+
 aws_ec2:
   credentials:
     access_key_id: AWS Account Access Key
@@ -38,6 +48,9 @@ aws_ec2:
       verifications:
         no_public_internet_ingress:
           description: Security Group has no rules open to 0.0.0.0/0.
+    image:
+      description: AWS EC2 AMI
+      verifications:
 
 aws_elb:
   credentials:
@@ -82,6 +95,8 @@ aws_rds:
           args: 'days: DAYS'
         multi_az:
           description: RDS Multi AZ set to yes.
+    db_snapshot:
+      description: AWS RDS Database Snapshot
 
 aws_s3:
   credentials:
@@ -100,3 +115,13 @@ aws_s3:
           description: Bucket is configured as a website.
         not_configured_as_website:
           description: Bucket is not configured as a website.
+
+aws_sqs:
+  credentials:
+    access_key_id: AWS Account Access Key
+    secret_access_key: AWS Account Secret Key
+    region: AWS Region (Default us-east-1)
+  resources:
+    queue:
+      description: AWS SQS Queue
+      verifications:
