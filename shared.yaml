@@ -1,7 +1,6 @@
 verifications:
   none_exist:
     description: No resources exist.
-    args: No arguments
   equals:
     description: Verify the list of resource mataches the given list of keys.
     args: 'keys: [RESOURCE_ID1, RESOURCE_ID2]'
