@@ -2,16 +2,21 @@
 
 # Outliers
 
-Outliers is a framework for verifying configuration of resources.
+A framework to detect misconfigurations (Outliers) in AWS resources.
 
 ## Overview
 
-* Applications and teams rely on multiple service providers (AWS, etc).
-* Providers deliver like resources with complex configuration (EC2 Instances, S3 Buckets, etc).
-* Resource configuration can be verified (launched from given AMI, contain private objects, etc).
-* Resources can be targeted or excluded by their ID (Instance ID, Object Key, etc).
+To detect misconfigurations at scale, Outliers provides a framework based on the following pattern:
+
+* Applications rely on resources delivered from multiple providers (EC2, S3, etc).
+* Resource configuration can be verified (Instance launched from given AMI, S3 bucket contains no public objects, etc).
+* Those not passing verifications, should be flagged for investigation.
+
+To target specific resources:
+
+* Outliers supports multiple account.
+* Resources can be targeted or excluded by their ID (EC2 Instance ID, S3 Object Key, etc).
 * Resources can be targeted or excluded by matching a filter (Instance has tag 'x' with value 'y').
-* Those not passing verifications, are flagged as Outliers.
 
 ## Requirements
 
@@ -25,50 +30,35 @@ Install the gem:
 
 ## Setup
 
-**Currently Outliers only supports AWS**
-
 Create **~/outliers.yml** with a list of credentials in the following format:
 
     credential_name:
-      key1: value1
-      key2: value2
+      region: AWS_REGION
+      access_key_id: AWS_ACCESS_ID
+      secret_access_key: AWS_SECRET_KEY
 
-Multiple accounts can be specified, to add a prod and preprod AWS account:
-
-    aws_pre_prod:
-      region: us-east-1
-      access_key_id: YYY
-      secret_access_key: XXX
+For example:
 
     aws_prod:
       region: us-east-1
-      access_key_id: AAA
-      secret_access_key: BBB
-
-Depending on the provider, different keys and values are required.
+      access_key_id: abcd1234abcd1234abcd
+      secret_access_key: abcd1234abcd1234abcdabcd1234abcd1234abcd
 
 ## Usage
 
-Outlier's DSL can be used to build up comprehensive list of verifications for a project or application.
+Outliers provides a DSL which can be used to build up a comprehensive list of evaluations.
 
-* Create a directory to store your evaluations. 
-* Evalutions are read from from files within the directory.
-* All files ending in **.rb** will be processed.
-* Each file can have one or more evaluation blocks. 
+Evalutions are read from from files ending with **.rb** within a target directory.
 
-To process a directory:
+Multiple evaluations can be specified in a file, with multiple files in directory.
 
-    outliers process -d /home/user/outliers
+## Getting Started
 
-To verify all instances are in a VPC, create the file **ec2.rb** and add the following block:
+Create a directory to store your evaluations. 
 
-    evaluate do
-      connect 'aws_prod', provider: 'aws_ec2'
-      resources 'instance'
-      verify 'vpc'
-    end
+    mkdir ~/outliers
 
-Files can have multiple evaluations, to add a validation that overrides the region:
+Within **aws_prod**, to verify all instances are in a VPC, create a file **ec2.rb** in **~/outliers** containing:
 
     evaluate do
       connect 'aws_prod', provider: 'aws_ec2'
@@ -76,96 +66,31 @@ Files can have multiple evaluations, to add a validation that overrides the regi
       verify 'vpc'
     end
 
-    evaluate do
-      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      resources 'instance'
-      verify 'vpc'
-    end
+Run outliers against the directory:
 
-The DSL supports any valid Ruby code. To iterate over multiple regions:
+    outliers process -d ~/outliers
 
-    ['us-west-1', 'us-west-2', 'us-east-1'].each do |region|
-      evaluate do
-        connect 'aws_prod', provider: 'aws_ec2', region: region
-        resources 'instance'
-        verify 'vpc'
-      end
-    end
+Sample Output:
 
-Evaluations can run multiple verifications. To validate instances are in a VPC, running and using a valid image:
+    I, [2013-09-24T09:42:39.925400 #4940]  INFO -- : Processing '~/outliers/ec2.rb'.
+    I, [2013-09-24T09:42:39.925657 #4940]  INFO -- : Connecting via 'aws_prod' to 'aws_ec2'.
+    I, [2013-09-24T09:42:39.925703 #4940]  INFO -- : Including connection options 'provider=aws_ec2,region=us-east-1'.
+    I, [2013-09-24T09:42:39.928945 #4940]  INFO -- : Loading 'instance' resource collection.
+    D, [2013-09-24T09:42:39.929015 #4940] DEBUG -- : Connecting to region 'us-east-1'.
+    I, [2013-09-24T09:42:41.192295 #4940]  INFO -- : Verifying 'vpc?'.
+    D, [2013-09-24T09:42:41.192498 #4940] DEBUG -- : Target resources 'i-abcd0001, i-abcd0002, i-abcd0003, i-abcd0004'.
+    D, [2013-09-24T09:42:41.476478 #4940] DEBUG -- : Verification of resource 'i-abcd0001' passed.
+    D, [2013-09-24T09:42:42.025429 #4940] DEBUG -- : Verification of resource 'i-abcd0002' passed.
+    D, [2013-09-24T09:42:42.278990 #4940] DEBUG -- : Verification of resource 'i-abcd0003' passed.
+    D, [2013-09-24T09:42:44.803911 #4940] DEBUG -- : Verification of resource 'i-abcd0004' passed.
+    I, [2013-09-24T09:42:44.804036 #4940]  INFO -- : Verification 'vpc?' passed.
+    I, [2013-09-24T09:42:44.804147 #4940]  INFO -- : Evaluations completed.
+    I, [2013-09-24T09:42:44.804211 #4940]  INFO -- : (0 evaluations failed, 1 evaluations passed.)
 
-    evaluate do
-      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      resources 'instance'
-      verify 'vpc'
-      verify 'running'
-      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
-    end
+## Examples
 
-Evaluations can be given names to help identify Outliers in results.
+See [examples](http://brettweavnet.github.io/outliers/examples) for a list of sample evaluations.
 
-    evaluate "validate_database_retention_period" do
-      connect 'aws_prod', provider: 'aws_rds', region: 'us-west-1'
-      resources 'db_instance'
-      verify 'backup_retention_period', days: 2
-    end
+## References
 
-To pass arguments to a verification:
-
-    evaluate do
-      connect 'aws_prod', provider: 'aws_rds', region: 'us-west-1'
-      resources 'db_instance'
-      verify 'backup_retention_period', days: 2
-    end
-
-To pass multiple arguments, specify them as an array:
-
-    evaluate do
-      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      resources 'instance'
-      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
-    end
-
-To only target a specific resource:
-
-    evaluate do
-      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      resources 'instance', 'i-12345678'
-      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
-    end
-
-To target multiple resources, you can pass an array:
-
-    evaluate do
-      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      resources 'instance', ['i-12345678', 'i-abcdef12']
-      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
-    end
-
-Sometimes you want to exclude resources that are known exceptions, to exclude an instance from the VPC validation:
-
-    evaluate do
-      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      resources 'instance'
-      exclude 'i-12345678'
-      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
-    end
-
-Resources have attributes which can be used to filter target resources.
-
-To filter instances who have tag 'Name' equal to 'web'.
-
-    evaluate do
-      connect 'aws_prod', provider: 'aws_ec2', region: 'us-west-1'
-      resources 'instance'
-      filter tag: 'Name:web'
-      verify 'valid_image_id', image_ids: ['ami-12345678','ami-87654321']
-    end
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+See the [providers](http://brettweavnet.github.io/outliers/providers), [resources](http://brettweavnet.github.io/outliers/resources) and [filters](http://brettweavnet.github.io/outliers/filters) pages for additional documentation.
