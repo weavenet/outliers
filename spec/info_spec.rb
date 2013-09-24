@@ -41,10 +41,25 @@ describe Outliers::Info do
   end
 
   context "#shared" do
-    it "should be able to load shared.yaml" do
-      expect(subject.reference.keys.count > 0).to be_true
+    before do
+      @verifications = Outliers::Verifications::Shared.instance_methods.map {|m| m.to_s.chomp('?')}
     end
 
-    it "should verify each shared verfiication has an entry in shared.yaml"
+    it "should be able to load shared.yaml" do
+      expect(subject.shared.keys.count > 0).to be_true
+    end
+
+    it "should verify each shared verfiication method has an entry in shared.yaml" do
+      @verifications.each do |name|
+        expect(subject.shared['verifications'].keys.include?(name)).to be_true
+      end
+    end
+
+    it "should verify each verification in shared.yaml has a shared verification method" do
+      subject.shared['verifications'].keys.each do |name|
+        expect(@verifications.include?(name)).to be_true
+      end
+    end
+
   end
 end

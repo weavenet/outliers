@@ -1,5 +1,9 @@
 ## HEAD
 
+## 0.3.1
+
+* Moved shared verification info to shared.yaml
+
 ## 0.3.0
 
 * Remove CLI support
