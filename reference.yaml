@@ -2,7 +2,7 @@ aws_cloud_formation:
   credentials:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
-    region: AWS Region (Default us-east-1)
+    region: AWS Region
   resources:
     stack:
       description: AWS Cloud Formation Stack
@@ -13,7 +13,7 @@ aws_ec2:
   credentials:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
-    region: AWS Region (Default us-east-1)
+    region: AWS Region
   resources:
     instance:
       description: AWS EC2 Instance
@@ -48,7 +48,7 @@ aws_elb:
   credentials:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
-    region: AWS Region (Default us-east-1)
+    region: AWS Region
   resources:
     load_balancer:
       description: AWS ELB (Elastic Load Balancer)
@@ -62,7 +62,7 @@ aws_iam:
   credentials:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
-    region: AWS Region (Default us-east-1)
+    region: AWS Region
   resources:
     user:
       description: AWS IAM User
@@ -79,7 +79,7 @@ aws_rds:
   credentials:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
-    region: AWS Region (Default us-east-1)
+    region: AWS Region
   resources:
     db_instance:
       description: AWS RDS Database Instance
@@ -99,7 +99,7 @@ aws_s3:
   credentials:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
-    region: AWS Region (Default us-east-1)
+    region: AWS Region
   resources:
     bucket:
       description: AWS S3 Bucket
@@ -118,7 +118,7 @@ aws_sqs:
   credentials:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
-    region: AWS Region (Default us-east-1)
+    region: AWS Region
   resources:
     queue:
       description: AWS SQS Queue
