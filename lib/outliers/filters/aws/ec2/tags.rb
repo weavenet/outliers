@@ -21,16 +21,6 @@ module Outliers
             end
           end
 
-          module_function
-
-          def self.filters
-            [
-              { name: 'tag',
-                description: 'Filter instances tagged with the given tag name and value.',
-                args: 'TAG_NAME:VALUE"' }
-            ]
-          end 
-
         end
       end
     end

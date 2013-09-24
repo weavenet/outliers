@@ -6,6 +6,7 @@ aws_cloud_formation:
   resources:
     stack:
       description: AWS Cloud Formation Stack
+      filters: {}
       verifications: {}
 
 aws_ec2:
@@ -16,6 +17,10 @@ aws_ec2:
   resources:
     instance:
       description: AWS EC2 Instance
+      filters:
+        tag:
+          description: Filter instances tagged with the given tag name and value.
+          args: 'TAG_NAME:VALUE'
       verifications:
         classic:
           description: Instance is in AWS Classic (No VPC).
@@ -30,11 +35,13 @@ aws_ec2:
           description: Instance is in a VPC.
     security_group:
       description: AWS EC2 Security Group
+      filters: {}
       verifications:
         no_public_internet_ingress:
           description: Security Group has no rules open to 0.0.0.0/0.
     image:
       description: AWS EC2 AMI
+      filters: {}
       verifications: {}
 
 aws_elb:
@@ -45,6 +52,7 @@ aws_elb:
   resources:
     load_balancer:
       description: AWS ELB (Elastic Load Balancer)
+      filters: {}
       verifications:
         ssl_certificates_valid:
           description: Validates all SSL certificates associated with an ELB are valid for given number of days.
@@ -58,6 +66,7 @@ aws_iam:
   resources:
     user:
       description: AWS IAM User
+      filters: {}
       verifications:
         mfa_enabled:
           description: Verify MFA enabled for user.
@@ -74,6 +83,7 @@ aws_rds:
   resources:
     db_instance:
       description: AWS RDS Database Instance
+      filters: {}
       verifications:
         backup_retention_period:
           description: Validate the backup retention period equals given days for the db_instance.
@@ -82,6 +92,7 @@ aws_rds:
           description: RDS Multi AZ set to yes.
     db_snapshot:
       description: AWS RDS Database Snapshot
+      filters: {}
       verifications: {}
 
 aws_s3:
@@ -92,6 +103,7 @@ aws_s3:
   resources:
     bucket:
       description: AWS S3 Bucket
+      filters: {}
       verifications:
         empty:
           description: Bucket has no objects.
@@ -110,4 +122,5 @@ aws_sqs:
   resources:
     queue:
       description: AWS SQS Queue
+      filters: {}
       verifications: {}

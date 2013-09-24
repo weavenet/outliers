@@ -23,10 +23,11 @@ describe Outliers::Info do
       expect((@resources - ['all_shared']).sort).to eq(Outliers::Resources.list.map {|r| r.to_human}.sort)
     end
 
-    it "should validate each resource has a verification list and description" do
+    it "should validate each resource has a verification list, filter list and description" do
       subject.reference.each_value do |provider_data|
         provider_data['resources'].each_value do |resource_data|
           expect(resource_data['verifications'].class).to eq(Hash)
+          expect(resource_data['filters'].class).to eq(Hash)
           expect(resource_data['description'].class).to eq(String)
         end
       end
