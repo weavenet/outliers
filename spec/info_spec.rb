@@ -39,4 +39,12 @@ describe Outliers::Info do
       end
     end
   end
+
+  context "#shared" do
+    it "should be able to load shared.yaml" do
+      expect(subject.reference.keys.count > 0).to be_true
+    end
+
+    it "should verify each shared verfiication has an entry in shared.yaml"
+  end
 end
