@@ -1,5 +1,9 @@
 ## HEAD
 
+## 0.3.2
+
+* Minor update to CLI help
+
 ## 0.3.1
 
 * Moved shared verification info to shared.yaml
