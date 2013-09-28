@@ -5,7 +5,6 @@
 A framework to detect misconfigurations (Outliers).
 
 ## Overview
----
 
 To detect misconfigurations at scale, Outliers provides a framework for performing complex evaluations of cloud resources:
 
@@ -15,17 +14,14 @@ To detect misconfigurations at scale, Outliers provides a framework for performi
 * Those not passing verification, are flagged as Outliers.
 
 ## Requirements
----
 
 * Ruby 1.9.3 or greater
 
 ## Installation
----
 
     gem install outliers
 
 ## Getting Started
----
 
 Create **~/outliers.yml** with a list of credentials in the following format:
 
@@ -75,11 +71,9 @@ Sample Output:
     I, [2013-09-24T09:42:44.804211 #4940]  INFO -- : (0 evaluations failed, 1 evaluations passed.)
 
 ## Examples
----
 
 See [examples](http://brettweavnet.github.io/outliers/examples) for a list of more advanced evaluations.
 
 ## References
----
 
 See [providers](http://brettweavnet.github.io/outliers/providers), [resources](http://brettweavnet.github.io/outliers/resources) and [filters](http://brettweavnet.github.io/outliers/filters) for additional documentation.
