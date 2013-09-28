@@ -21,7 +21,7 @@ module Outliers
       threads.each {|t| t.join}
     end
 
-    def evaluate(name='unspecified', &block)
+    def evaluate(name=nil, &block)
       while Thread.list.count > thread_count
         logger.info "Maximum concurrent threads running, sleeping."
         sleep 2
