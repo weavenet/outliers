@@ -5,29 +5,27 @@
 A framework to detect misconfigurations (Outliers).
 
 ## Overview
+---
 
-To detect misconfigurations at scale, Outliers provides a framework for performing complex evaluations:
+To detect misconfigurations at scale, Outliers provides a framework for performing complex evaluations of cloud resources:
 
 * Applications rely on **resources** delivered from multiple **providers** (EC2, S3, etc).
 * Resource configuration can be evaluated against specific **verifications**  (Instance launched from given AMI, S3 bucket contains no public objects, etc).
 * Verifications can be performed against a subset of resources based on a **filter**.
 * Those not passing verification, are flagged as Outliers.
 
-Evalutions are read from from files ending with **.rb** within a target directory.
-
-Multiple evaluations can be specified in a file, with multiple files in directory.
-
 ## Requirements
+---
 
-* Ruby 1.9.3 or greater.
+* Ruby 1.9.3 or greater
 
 ## Installation
-
-Install the gem:
+---
 
     gem install outliers
 
 ## Getting Started
+---
 
 Create **~/outliers.yml** with a list of credentials in the following format:
 
@@ -43,11 +41,11 @@ For example:
       access_key_id: abcd1234abcd1234abcd
       secret_access_key: abcd1234abcd1234abcdabcd1234abcd1234abcd
 
-Outliers provides a DSL which can be used to build up a comprehensive list of evaluations. Create a directory to store your evaluations. 
+Create a directory to store your evaluations.
 
     mkdir ~/outliers
 
-To verify all instances are in a VPC, create a file **ec2.rb** in **~/outliers** containing:
+To verify all instances in aws_prod are in a VPC, create ec2.rb in ~/outliers containing:
 
     evaluate do
       connect 'aws_prod', provider: 'aws_ec2'
@@ -76,13 +74,12 @@ Sample Output:
     I, [2013-09-24T09:42:44.804147 #4940]  INFO -- : Evaluations completed.
     I, [2013-09-24T09:42:44.804211 #4940]  INFO -- : (0 evaluations failed, 1 evaluations passed.)
 
-* Resources can be targeted or excluded by their ID (EC2 Instance ID, S3 Object Key, etc).
-* Resources can be targeted or excluded by matching a filter (Instance has tag 'x' with value 'y').
-
 ## Examples
+---
 
 See [examples](http://brettweavnet.github.io/outliers/examples) for a list of more advanced evaluations.
 
 ## References
+---
 
-See the [providers](http://brettweavnet.github.io/outliers/providers), [resources](http://brettweavnet.github.io/outliers/resources) and [filters](http://brettweavnet.github.io/outliers/filters) pages for additional documentation.
+See [providers](http://brettweavnet.github.io/outliers/providers), [resources](http://brettweavnet.github.io/outliers/resources) and [filters](http://brettweavnet.github.io/outliers/filters) for additional documentation.
