@@ -6,7 +6,7 @@ A framework to detect misconfigurations (Outliers).
 
 ## Overview
 
-To detect misconfigurations at scale, Outliers provides a framework for performing complex evaluations of cloud resources:
+To detect misconfigurations at scale, Outliers provides a framework for performing complex evaluations of cloud resources based on the following:
 
 * Applications rely on **resources** delivered from multiple **providers** (EC2, S3, etc).
 * Resource configuration can be evaluated against specific **verifications**  (Instance launched from given AMI, S3 bucket contains no public objects, etc).
