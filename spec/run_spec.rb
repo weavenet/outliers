@@ -83,8 +83,8 @@ describe Outliers::Run do
       end
     end
 
-    it "should kick off a new evaluation with unspecified name" do
-      Outliers::Evaluation.should_receive(:new).with(:name => 'unspecified', :run => subject).
+    it "should kick off a new evaluation with nil name" do
+      Outliers::Evaluation.should_receive(:new).with(:name => nil, :run => subject).
         and_return evaluation1
       evaluation1.should_receive(:connect).with('test')
       subject.evaluate do
