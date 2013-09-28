@@ -1,5 +1,9 @@
 ## HEAD
 
+## 0.3.3
+
+* Updated unspecified evaluation log message.
+
 ## 0.3.2
 
 * Minor update to CLI help
