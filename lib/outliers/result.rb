@@ -19,7 +19,7 @@ module Outliers
     def initialize(args)
       @credentials_name  = args[:credentials_name]
       @failing_resources = args[:failing_resources]
-      @name              = args[:name]
+      @name              = args[:name] || 'unspecified'
       @passing_resources = args[:passing_resources]
       @provider_name     = args[:provider_name]
       @resource_name     = args[:resource_name]

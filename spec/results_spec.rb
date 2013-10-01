@@ -25,6 +25,7 @@ describe Outliers::Result do
       expect(subject.passing_resources).to eq([resource1, resource2])
     end
 
+
     it "should return the result information" do
       expect(subject.credentials_name).to eq('cnt')
       expect(subject.failing_resources).to eq([])
@@ -33,6 +34,14 @@ describe Outliers::Result do
       expect(subject.provider_name).to eq('aws')
       expect(subject.resource_name).to eq('instance')
       expect(subject.verification_name).to eq('vpc')
+    end
+
+    context "#name" do
+      subject { Outliers::Result.new({}) }
+
+      it "should set the name to unspecified if not set" do
+        expect(subject.name).to eq('unspecified')
+      end
     end
 
     context "#to_json" do
