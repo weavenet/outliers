@@ -1,5 +1,7 @@
 ## HEAD
 
+* Refactor results
+
 ## 0.3.3
 
 * Updated unspecified evaluation log message.
