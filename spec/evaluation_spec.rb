@@ -85,8 +85,8 @@ describe Outliers::Evaluation do
     end
 
     context "#verify" do
-      let(:result1) { mock 'result1' }
-      let(:result2) { mock 'result2' }
+      let(:result1) { stub 'result1', :passed? => true }
+      let(:result2) { stub 'result2', :passed? => true }
       let(:verification_response) { ( { passing_resources: ['1', '2'], failing_resources: ['3', '4'] } ) }
 
       before do
