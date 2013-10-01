@@ -1,17 +1,17 @@
 module Outliers
   class Result
 
-    attr_reader :connection_name, :failing_resources, :name, :passing_resources,
-                :provider_name, :resource_name, :verification
+    attr_reader :credentials_name, :failing_resources, :name, :passing_resources,
+                :provider_name, :resource_name, :verification_name
 
     def initialize(args)
-      @connection_name   = args[:connection_name]
+      @credentials_name  = args[:credentials_name]
       @failing_resources = args[:failing_resources]
       @name              = args[:name]
       @passing_resources = args[:passing_resources]
       @provider_name     = args[:provider_name]
       @resource_name     = args[:resource_name]
-      @verification      = args[:verification]
+      @verification_name = args[:verification_name].chomp('?')
     end
 
     def to_s

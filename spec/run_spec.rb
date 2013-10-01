@@ -94,8 +94,8 @@ describe Outliers::Run do
   end
 
   context "returning results" do
-    let(:result1) { Outliers::Result.new name: 'result1', passing_resources: [], failing_resources: [], evaluation: 'test', verification: 'ver' }
-    let(:result2) { Outliers::Result.new name: 'result2', passing_resources: [], failing_resources: ['failed'], evaluation: 'test', verification: 'ver' }
+    let(:result1) { Outliers::Result.new name: 'result1', passing_resources: [], failing_resources: [], verification_name: 'ver' }
+    let(:result2) { Outliers::Result.new name: 'result2', passing_resources: [], failing_resources: ['failed'], verification_name: 'ver' }
 
     before do
       subject.results << result1

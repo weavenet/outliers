@@ -31,9 +31,9 @@ module Outliers
 
         @run.failing_results.each do |r|
           if r.name
-            @logger.info "Results of '#{r.name}', verifying '#{r.verification}' of '#{r.resource_name}' failed."
+            @logger.info "Results of '#{r.name}', verifying '#{r.verification_name}' of '#{r.provider_name}:#{r.resource_name}' via '#{r.credentials_name}' failed."
           else
-            @logger.info "Verification '#{r.verification}' of '#{r.resource_name}' failed."
+            @logger.info "Verification '#{r.verification_name}' of '#{r.provider_name}:#{r.resource_name}' via '#{r.credentials_name}' failed."
           end
           @logger.info "Failing resource IDs '#{r.failing_resources.map{|r| r.id}.join(', ')}'"
         end

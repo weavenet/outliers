@@ -8,16 +8,16 @@ module Outliers
       @name = args[:name]
     end
 
-    def connect(name, options={})
-      @connection_name = name
-      @provider_name   = merged_credentials(name, options).fetch 'provider'
+    def connect(credentials_name, options={})
+      @credentials_name = credentials_name
+      @provider_name    = merged_credentials(credentials_name, options).fetch 'provider'
 
-      logger.info "Connecting via '#{name}' to '#{@provider_name}'."
+      logger.info "Connecting via '#{credentials_name}' to '#{@provider_name}'."
       logger.info "Including connection options '#{options.map {|k,v| "#{k}=#{v}"}.join(',')}'." if options.any?
 
       set_provider_name_array
 
-      @provider = Outliers::Provider.connect_to merged_credentials(name, options)
+      @provider = Outliers::Provider.connect_to merged_credentials(credentials_name, options)
     end
 
     def resources(name, targets=[])
@@ -42,20 +42,20 @@ module Outliers
       resource_collection.filter args.keys_to_s
     end
 
-    def verify(verification, arguments={})
+    def verify(verification_name, arguments={})
       @resources_loaded ||= resource_collection.load_all
 
-      verification_result = resource_collection.verify verification, arguments.keys_to_sym
+      verification_result = resource_collection.verify verification_name, arguments.keys_to_sym
 
-      result = Outliers::Result.new connection_name:   @connection_name,
+      result = Outliers::Result.new credentials_name:  @credentials_name,
                                     failing_resources: verification_result.fetch(:failing_resources),
                                     name:              @name,
                                     passing_resources: verification_result.fetch(:passing_resources),
                                     provider_name:     @provider_name,
                                     resource_name:     @resource_name,
-                                    verification:      verification
+                                    verification_name: verification_name
 
-      logger.info "Verification '#{verification}' #{result}."
+      logger.info "Verification '#{verification_name}' #{result}."
 
       @run.results << result
     end
