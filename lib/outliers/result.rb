@@ -6,6 +6,16 @@ module Outliers
     attr_reader :credentials_name, :failing_resources, :name, :passing_resources,
                 :provider_name, :resource_name, :verification_name
 
+    def to_json
+      { 'credentials_name'     => credentials_name,
+        'failing_resource_ids' => failing_resource_ids,
+        'name'                 => name,
+        'passing_resource_ids' => passing_resource_ids,
+        'provider_name'        => provider_name,
+        'resource_name'        => resource_name,
+        'verification_name'    => verification_name }.to_json
+    end
+
     def initialize(args)
       @credentials_name  = args[:credentials_name]
       @failing_resources = args[:failing_resources]
@@ -23,6 +33,16 @@ module Outliers
 
     def failed?
       @failing_resources.any?
+    end
+
+    private
+
+    def passing_resource_ids
+      passing_resources.map{|r| r.id}
+    end
+
+    def failing_resource_ids
+      failing_resources.map{|r| r.id}
     end
 
   end
