@@ -1,5 +1,6 @@
 ## HEAD
 
+* Adding JSON support to result
 * Refactor results
 
 ## 0.3.3
