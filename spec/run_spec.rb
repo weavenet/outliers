@@ -94,8 +94,8 @@ describe Outliers::Run do
   end
 
   context "returning results" do
-    let(:result1) { Outliers::Result.new name: 'result1', passing_resources: [], failing_resources: [], evaluation: 'test', verification: 'ver' }
-    let(:result2) { Outliers::Result.new name: 'result2', passing_resources: [], failing_resources: ['failed'], evaluation: 'test', verification: 'ver' }
+    let(:result1) { Outliers::Result.new name: 'result1', passing_resources: [], failing_resources: [], verification_name: 'ver' }
+    let(:result2) { Outliers::Result.new name: 'result2', passing_resources: [], failing_resources: ['failed'], verification_name: 'ver' }
 
     before do
       subject.results << result1
@@ -104,13 +104,13 @@ describe Outliers::Run do
 
     describe "#passed" do
       it "should return an array of all passing results" do
-        expect(subject.passed).to eq([result1])
+        expect(subject.passing_results).to eq([result1])
       end
     end
 
     describe "#failed" do
       it "should return an array of all failing results" do
-        expect(subject.failed).to eq([result2])
+        expect(subject.failing_results).to eq([result2])
       end
     end
   end
