@@ -9,10 +9,6 @@ describe Outliers::Result do
                                    provider_name:     'aws',
                                    resource_name:     'instance',
                                    verification_name: 'vpc' }
-                                   
-    it "should return passed" do
-      expect(subject.to_s).to eq 'passed'
-    end
 
     it "should return true for passing verification" do
       expect(subject.passed?).to be_true
@@ -46,9 +42,6 @@ describe Outliers::Result do
                                    provider_name:     'aws',
                                    resource_name:     'instance',
                                    verification_name: 'vpc' }
-    it "should return failed" do
-      expect(subject.to_s).to eq 'failed'
-    end
 
     it "should return false for passing verification" do
       expect(subject.passed?).to be_false

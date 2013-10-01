@@ -1,3 +1,5 @@
+require 'json'
+
 module Outliers
   class Result
 
@@ -14,9 +16,6 @@ module Outliers
       @verification_name = args[:verification_name]
     end
 
-    def to_s
-      passed? ? 'passed' : 'failed'
-    end
 
     def passed?
       !failed?

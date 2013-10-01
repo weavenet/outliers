@@ -55,7 +55,7 @@ module Outliers
                                     resource_name:     @resource_name,
                                     verification_name: verification_name
 
-      logger.info "Verification '#{verification_name}' #{result}."
+      logger.info "Verification '#{verification_name}' #{result.passed? ? 'passed' : 'failed'}."
 
       @run.results << result
     end
