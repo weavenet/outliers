@@ -2,11 +2,13 @@ require 'spec_helper'
 
 describe Outliers::Result do
   context "passing" do
-    subject { Outliers::Result.new evaluation:        'evalme',
+    subject { Outliers::Result.new credentials_name:  'cnt',
                                    failing_resources: [],
+                                   name:              'evalme',
                                    passing_resources: ['key1', 'key2'],
-                                   resource:          'instance',
-                                   verification:      'vpc' }
+                                   provider_name:     'aws',
+                                   resource_name:     'instance',
+                                   verification_name: 'vpc' }
                                    
     it "should return passed" do
       expect(subject.to_s).to eq 'passed'
@@ -23,14 +25,27 @@ describe Outliers::Result do
     it "should return the result information" do
       expect(subject.passing_resources).to eq(['key1', 'key2'])
     end
+
+    it "should return the result information" do
+      expect(subject.credentials_name).to eq('cnt')
+      expect(subject.failing_resources).to eq([])
+      expect(subject.name).to eq('evalme')
+      expect(subject.passing_resources).to eq(['key1','key2'])
+      expect(subject.provider_name).to eq('aws')
+      expect(subject.resource_name).to eq('instance')
+      expect(subject.verification_name).to eq('vpc')
+    end
+
   end
 
   context "failing" do
-    subject { Outliers::Result.new evaluation:        'evalme',
+    subject { Outliers::Result.new credentials_name:  'cnt',
                                    failing_resources: ['key3', 'key4'],
+                                   name:              'evalme',
                                    passing_resources: [],
-                                   resource:          'instance',
-                                   verification:      'vpc' }
+                                   provider_name:     'aws',
+                                   resource_name:     'instance',
+                                   verification_name: 'vpc' }
     it "should return failed" do
       expect(subject.to_s).to eq 'failed'
     end
