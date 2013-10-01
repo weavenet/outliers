@@ -24,23 +24,23 @@ module Outliers
           exit 1
         end
 
-        passed = @run.passed.count
-        failed = @run.failed.count
+        passing_count = @run.passing_results.count
+        failing_count = @run.failing_results.count
 
         @logger.info "Evaluations completed."
 
-        @run.failed.each do |f|
-          if f.evaluation
-            @logger.info "Evaluation '#{f.evaluation}' verification '#{f.verification}' of '#{f.resource}' failed."
+        @run.failing_results.each do |r|
+          if r.name
+            @logger.info "Results of '#{r.name}', verifying '#{r.verification}' of '#{r.resource_name}' failed."
           else
-            @logger.info "Verification '#{f.verification}' of '#{f.resource}' failed."
+            @logger.info "Verification '#{r.verification}' of '#{r.resource_name}' failed."
           end
-          @logger.info "Failing resource IDs '#{f.failing_resources.map{|r| r.id}.join(', ')}'"
+          @logger.info "Failing resource IDs '#{r.failing_resources.map{|r| r.id}.join(', ')}'"
         end
 
-        @logger.info "(#{failed} evaluations failed, #{passed} evaluations passed.)"
+        @logger.info "(#{failing_count} evaluations failed, #{passing_count} evaluations passed.)"
 
-        exit 1 unless failed.zero?
+        exit 1 unless failing_count.zero?
       end
 
       def command_name

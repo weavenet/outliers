@@ -104,13 +104,13 @@ describe Outliers::Run do
 
     describe "#passed" do
       it "should return an array of all passing results" do
-        expect(subject.passed).to eq([result1])
+        expect(subject.passing_results).to eq([result1])
       end
     end
 
     describe "#failed" do
       it "should return an array of all failing results" do
-        expect(subject.failed).to eq([result2])
+        expect(subject.failing_results).to eq([result2])
       end
     end
   end

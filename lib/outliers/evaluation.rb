@@ -1,7 +1,7 @@
 module Outliers
   class Evaluation
 
-    attr_reader :collection, :provider_name, :provider_name_array
+    attr_reader :resource_collection, :provider_name, :provider_name_array
 
     def initialize(args)
       @run  = args[:run]
@@ -9,7 +9,8 @@ module Outliers
     end
 
     def connect(name, options={})
-      @provider_name = merged_credentials(name, options).fetch 'provider'
+      @connection_name = name
+      @provider_name   = merged_credentials(name, options).fetch 'provider'
 
       logger.info "Connecting via '#{name}' to '#{@provider_name}'."
       logger.info "Including connection options '#{options.map {|k,v| "#{k}=#{v}"}.join(',')}'." if options.any?
@@ -21,34 +22,37 @@ module Outliers
 
     def resources(name, targets=[])
       logger.info "Loading '#{name}' resource collection."
-      @collection = collection_object name
+      @resource_name       = name
+      @resource_collection = collection_object name
 
       targets_array = Array(targets)
 
       if targets_array.any?
         logger.info "Verifying '#{targets_array.join(', ')}' from '#{name}' collection."
-        collection.targets = targets_array
+        resource_collection.targets = targets_array
       end
-      collection
+      resource_collection
     end
 
     def exclude(exclusions)
-      collection.exclude_by_key Array(exclusions)
+      resource_collection.exclude_by_key Array(exclusions)
     end
 
     def filter(args)
-      collection.filter args.keys_to_s
+      resource_collection.filter args.keys_to_s
     end
 
     def verify(verification, arguments={})
-      @resources_loaded ||= collection.load_all
+      @resources_loaded ||= resource_collection.load_all
 
-      verification_result = collection.verify verification, arguments.keys_to_sym
+      verification_result = resource_collection.verify verification, arguments.keys_to_sym
 
-      result = Outliers::Result.new evaluation:        @name,
+      result = Outliers::Result.new connection_name:   @connection_name,
                                     failing_resources: verification_result.fetch(:failing_resources),
+                                    name:              @name,
                                     passing_resources: verification_result.fetch(:passing_resources),
-                                    resource:          @collection,
+                                    provider_name:     @provider_name,
+                                    resource_name:     @resource_name,
                                     verification:      verification
 
       logger.info "Verification '#{verification}' #{result}."
