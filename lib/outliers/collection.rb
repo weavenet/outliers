@@ -66,13 +66,14 @@ module Outliers
     end
 
     def verify(name, arguments={})
-      name << "?" unless name =~ /^.*\?$/
+      logger.info "Verifying '#{name}'."
+
+      name += "?" unless name =~ /^.*\?$/
 
       unless list.any?
         return { failing_resources: [], passing_resources: [] }
       end
 
-      logger.info "Verifying '#{name}'."
       logger.debug "Target resources '#{list_by_key.join(', ')}'."
 
       unless verification_exists? name
@@ -139,9 +140,9 @@ module Outliers
       set_target_resources verification if targets.any?
 
       failing_resources = reject do |resource|
-        result = send_verification resource, verification, arguments
-        logger.debug "Verification of resource '#{resource.id}' #{result ? 'passed' : 'failed'}."
-        result
+        r = send_verification resource, verification, arguments
+        logger.debug "Verification of resource '#{resource.id}' #{r ? 'passed' : 'failed'}."
+        r
       end
       { failing_resources: failing_resources, passing_resources: list - failing_resources }
     end

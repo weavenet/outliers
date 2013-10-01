@@ -36,12 +36,6 @@ describe Outliers::Result do
       expect(subject.verification_name).to eq('vpc')
     end
 
-    context "with ?" do
-      subject { Outliers::Result.new verification_name:  'vpc?' }
-      it "should remove question mark from verification names" do
-        expect(subject.verification_name).to eq('vpc')
-      end
-    end
   end
 
   context "failing" do

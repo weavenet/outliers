@@ -11,7 +11,7 @@ module Outliers
       @passing_resources = args[:passing_resources]
       @provider_name     = args[:provider_name]
       @resource_name     = args[:resource_name]
-      @verification_name = args[:verification_name].chomp('?')
+      @verification_name = args[:verification_name]
     end
 
     def to_s
