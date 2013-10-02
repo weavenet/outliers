@@ -6,9 +6,10 @@ module Outliers
       def post(result)
         payload = result.to_json
         host = 'localhost'
-        port = '80'
-        path = '/input'
-        req = Net::HTTP::Post.new(path, initheader = {'Content-Type' =>'application/json'})
+        port = '3000'
+        path = '/results'
+        req = Net::HTTP::Post.new(path, initheader = { 'Content-Type' => 'application/json',
+                                                       'Accept'       => 'application/vnd.outliers-v1+json' })
         req.body = payload
         logger.info "Posting results to #{host}#{path}."
         response = Net::HTTP.new(host, port).start {|http| http.request(req) }
@@ -17,7 +18,6 @@ module Outliers
         else
           logger.error "Failed."
         end
-        puts response.body
       end
 
       private

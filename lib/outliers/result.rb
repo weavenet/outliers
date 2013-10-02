@@ -26,7 +26,6 @@ module Outliers
       @verification_name = args[:verification_name]
     end
 
-
     def passed?
       !failed?
     end
