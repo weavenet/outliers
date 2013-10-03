@@ -5,7 +5,7 @@ module Outliers
         class BucketCollection < Collection
 
           def load_all
-            unless provider.credentials['region'] == 'us-east-1'
+            unless provider.account['region'] == 'us-east-1'
               raise Exceptions::UnsupportedRegion.new "Bucket verifications must target region us-east-1."
             end
             connect.buckets.map {|r| resource_class.new r}

@@ -3,11 +3,11 @@ require 'json'
 module Outliers
   class Result
 
-    attr_reader :credentials_name, :failing_resources, :name, :passing_resources,
+    attr_reader :account_name, :failing_resources, :name, :passing_resources,
                 :provider_name, :resource_name, :verification_name
 
     def to_json
-      { 'credentials_name'     => credentials_name,
+      { 'account_name'     => account_name,
         'name'                 => name,
         'provider_name'        => provider_name,
         'resource_name'        => resource_name,
@@ -16,7 +16,7 @@ module Outliers
     end
 
     def initialize(args)
-      @credentials_name  = args[:credentials_name]
+      @account_name  = args[:account_name]
       @failing_resources = args[:failing_resources]
       @name              = args[:name] || 'unspecified'
       @passing_resources = args[:passing_resources]

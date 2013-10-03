@@ -4,18 +4,18 @@ describe Outliers::Provider do
   subject { Outliers::Provider }
 
   context "#connect_to" do
-    let(:credentials) { ( { :name               => "test_credentials_1",
+    let(:account) { ( { :name               => "test_account_1",
                             "provider"          => "aws_ec2",
                             "secret_access_key" => "abc",
                             "access_key_id"     => "123" } ) }
 
-    it "should connect to the provider specified in the given credentials" do
-      expect(subject.connect_to(credentials).class).to eq(Outliers::Providers::Aws::Ec2)
+    it "should connect to the provider specified in the given account" do
+      expect(subject.connect_to(account).class).to eq(Outliers::Providers::Aws::Ec2)
     end
 
-    it "should set the credentials instance variable" do
-      expect(subject.connect_to(credentials).credentials).
-        to eq({ :name               => "test_credentials_1",
+    it "should set the account instance variable" do
+      expect(subject.connect_to(account).account).
+        to eq({ :name               => "test_account_1",
                 "provider"          => "aws_ec2",
                 "secret_access_key" => "abc",
                 "access_key_id"     => "123" })

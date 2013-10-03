@@ -1,14 +1,14 @@
 module Outliers
-  module Credentials
+  module Account
     module_function
 
     def load_from_file(file)
-      credentials = {}
+      account = {}
       contents = File.read file
       YAML.load(contents).each_pair do |k,v|
-        credentials[k] = v
+        account[k] = v
       end
-      credentials
+      account
     end
 
   end

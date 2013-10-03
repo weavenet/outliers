@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe Outliers::Credentials do
-  subject { Outliers::Credentials }
-  let(:credentials1) { fixture_file 'credentials1.yml' }
-  let(:credentials2) { fixture_file 'credentials2.yml' }
+describe Outliers::Account do
+  subject { Outliers::Account }
+  let(:account1) { fixture_file 'account1.yml' }
+  let(:account2) { fixture_file 'account2.yml' }
 
   context "#load_from_file" do
-    it "should load the credentials from the given yaml file" do
-      File.should_receive(:read).with('/home/user/outliers.yml').and_return credentials1
-      results = { "test_credentials_1" => 
+    it "should load the account from the given yaml file" do
+      File.should_receive(:read).with('/home/user/outliers.yml').and_return account1
+      results = { "test_account_1" => 
                   { "region"            => "us-west-1",
                     "provider"          => "aws_ec2", 
                     "access_key_id"     => "01234567890123456789",

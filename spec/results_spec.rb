@@ -5,7 +5,7 @@ describe Outliers::Result do
   let(:resource2) {stub 'resource2', id: 2}
 
   context "passing" do
-    subject { Outliers::Result.new credentials_name:  'cnt',
+    subject { Outliers::Result.new account_name:  'cnt',
                                    failing_resources: [],
                                    name:              'evalme',
                                    passing_resources: [resource1, resource2],
@@ -27,7 +27,7 @@ describe Outliers::Result do
 
 
     it "should return the result information" do
-      expect(subject.credentials_name).to eq('cnt')
+      expect(subject.account_name).to eq('cnt')
       expect(subject.failing_resources).to eq([])
       expect(subject.name).to eq('evalme')
       expect(subject.passing_resources).to eq([resource1, resource2])
@@ -47,7 +47,7 @@ describe Outliers::Result do
     context "#to_json" do
       it "should return the results as json" do
         resources = [ { 'id' => 1, 'passing' => 1 }, { 'id' => 2, 'passing' => 1 } ]
-        json =  { 'credentials_name'     => 'cnt',
+        json =  { 'account_name'     => 'cnt',
                   'name'                 => 'evalme',
                   'provider_name'        => 'aws',
                   'resource_name'        => 'instance',
@@ -59,7 +59,7 @@ describe Outliers::Result do
   end
 
   context "failing" do
-    subject { Outliers::Result.new credentials_name:  'cnt',
+    subject { Outliers::Result.new account_name:  'cnt',
                                    failing_resources: [resource1, resource2],
                                    name:              'evalme',
                                    passing_resources: [],

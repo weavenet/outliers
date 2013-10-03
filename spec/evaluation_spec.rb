@@ -2,13 +2,13 @@ require 'spec_helper'
 
 describe Outliers::Evaluation do
   let(:run) { mock 'run' }
-  let(:connect) { subject.connect('test_credentials_1') }
+  let(:connect) { subject.connect('test_account_1') }
   let(:resources) { subject.resources('security_group') }
   subject { Outliers::Evaluation.new :run => run, :name => 'test' }
 
   before do
     stub_logger
-    run.stub :credentials => credentials
+    run.stub :account => account
   end
 
   context "#connect" do
@@ -18,17 +18,17 @@ describe Outliers::Evaluation do
     end
 
     it "should connect to the provider specified as an option" do
-      subject.connect('test_credentials_1', { 'provider' => 'aws_rds' })
+      subject.connect('test_account_1', { 'provider' => 'aws_rds' })
       expect(subject.provider_name_array).to eq(['Aws', 'Rds'])
     end
 
     it "should throw an error if the provider if the provider class is unkown" do
-      expect { subject.connect('test_credentials_1', { 'provider' => 'bad_provider' }) }.
+      expect { subject.connect('test_account_1', { 'provider' => 'bad_provider' }) }.
         to raise_error(Outliers::Exceptions::UnknownProvider)
     end
 
     it "should override a valid provider with one provided" do
-      subject.connect('test_credentials_1', { 'provider' => 'aws_ec2' })
+      subject.connect('test_account_1', { 'provider' => 'aws_ec2' })
       expect(subject.provider_name_array).to eq(['Aws', 'Ec2'])
     end
   end
@@ -53,14 +53,14 @@ describe Outliers::Evaluation do
       end
 
       it "should test that over ride options are applied when selecting colleciton" do
-        subject.connect('test_credentials_1', :provider => 'aws_rds')
+        subject.connect('test_account_1', :provider => 'aws_rds')
         subject.resources('db_instance')
         expect(subject.resource_collection.provider.class).
           to eq(Outliers::Providers::Aws::Rds)
       end
 
       it "should set the collection targets if specified" do
-        subject.connect('test_credentials_1', :provider => 'aws_rds')
+        subject.connect('test_account_1', :provider => 'aws_rds')
         expect(subject.resources('db_instance', 'instance-123').targets).to eq ['instance-123']
       end
     end
@@ -96,7 +96,7 @@ describe Outliers::Evaluation do
 
       it "should verify the given method" do
         resources.should_receive(:verify).with('test_verification?', {}).and_return verification_response
-        Outliers::Result.should_receive(:new).with(credentials_name:   'test_credentials_1',
+        Outliers::Result.should_receive(:new).with(account_name:   'test_account_1',
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
@@ -108,7 +108,7 @@ describe Outliers::Evaluation do
 
       it "should convert all options to symbols" do
         resources.should_receive(:verify).with('test_verification?', :test => false).and_return verification_response
-        Outliers::Result.should_receive(:new).with(credentials_name:   'test_credentials_1',
+        Outliers::Result.should_receive(:new).with(account_name:   'test_account_1',
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
@@ -121,14 +121,14 @@ describe Outliers::Evaluation do
       it "should run verify multiple times in given evaluation" do
         resources.should_receive(:verify).with('test_verification1?', :test => false).and_return verification_response
         resources.should_receive(:verify).with('test_verification2?', :test => true).and_return verification_response
-        Outliers::Result.should_receive(:new).with(credentials_name:   'test_credentials_1',
+        Outliers::Result.should_receive(:new).with(account_name:   'test_account_1',
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification1?').and_return result1
-        Outliers::Result.should_receive(:new).with(credentials_name:   'test_credentials_1',
+        Outliers::Result.should_receive(:new).with(account_name:   'test_account_1',
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
