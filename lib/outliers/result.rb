@@ -7,16 +7,16 @@ module Outliers
                 :provider_name, :resource_name, :verification_name
 
     def to_json
-      { 'account_name'     => account_name,
-        'name'                 => name,
-        'provider_name'        => provider_name,
-        'resource_name'        => resource_name,
-        'verification_name'    => verification_name,
-        'resources'            => resources }.to_json
+      { 'account_name'      => account_name,
+        'name'              => name,
+        'provider_name'     => provider_name,
+        'resource_name'     => resource_name,
+        'verification_name' => verification_name,
+        'resources'         => resources }.to_json
     end
 
     def initialize(args)
-      @account_name  = args[:account_name]
+      @account_name      = args[:account_name]
       @failing_resources = args[:failing_resources]
       @name              = args[:name] || 'unspecified'
       @passing_resources = args[:passing_resources]

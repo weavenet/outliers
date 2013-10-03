@@ -47,7 +47,7 @@ describe Outliers::Result do
     context "#to_json" do
       it "should return the results as json" do
         resources = [ { 'id' => 1, 'passing' => 1 }, { 'id' => 2, 'passing' => 1 } ]
-        json =  { 'account_name'     => 'cnt',
+        json =  { 'account_name'         => 'cnt',
                   'name'                 => 'evalme',
                   'provider_name'        => 'aws',
                   'resource_name'        => 'instance',
@@ -59,7 +59,7 @@ describe Outliers::Result do
   end
 
   context "failing" do
-    subject { Outliers::Result.new account_name:  'cnt',
+    subject { Outliers::Result.new account_name:      'cnt',
                                    failing_resources: [resource1, resource2],
                                    name:              'evalme',
                                    passing_resources: [],
