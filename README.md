@@ -1,4 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/brettweavnet/outliers.png)](http://travis-ci.org/brettweavnet/outliers)
+[![Code Climate](https://codeclimate.com/github/brettweavnet/outliers.png)](https://codeclimate.com/github/brettweavnet/outliers)
 
 # Outliers
 

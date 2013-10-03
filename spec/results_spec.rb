@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Outliers::Result do
   let(:resource1) {stub 'resource1', id: 1}
-  let(:resource2) {stub 'resource1', id: 2}
+  let(:resource2) {stub 'resource2', id: 2}
 
   context "passing" do
     subject { Outliers::Result.new credentials_name:  'cnt',
@@ -25,6 +25,7 @@ describe Outliers::Result do
       expect(subject.passing_resources).to eq([resource1, resource2])
     end
 
+
     it "should return the result information" do
       expect(subject.credentials_name).to eq('cnt')
       expect(subject.failing_resources).to eq([])
@@ -35,15 +36,23 @@ describe Outliers::Result do
       expect(subject.verification_name).to eq('vpc')
     end
 
+    context "#name" do
+      subject { Outliers::Result.new({}) }
+
+      it "should set the name to unspecified if not set" do
+        expect(subject.name).to eq('unspecified')
+      end
+    end
+
     context "#to_json" do
       it "should return the results as json" do
+        resources = [ { 'id' => 1, 'passing' => 1 }, { 'id' => 2, 'passing' => 1 } ]
         json =  { 'credentials_name'     => 'cnt',
-                  'failing_resource_ids' => [].map{|r| r.id},
                   'name'                 => 'evalme',
-                  'passing_resource_ids' => [resource1, resource2].map{|r| r.id},
                   'provider_name'        => 'aws',
                   'resource_name'        => 'instance',
-                  'verification_name'    => 'vpc' }.to_json
+                  'verification_name'    => 'vpc',
+                  'resources'            => resources }.to_json
         expect(subject.to_json).to eq(json)
       end
     end
