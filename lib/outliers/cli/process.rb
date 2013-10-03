@@ -29,6 +29,15 @@ module Outliers
 
         @logger.info "Evaluations completed."
 
+        @logger.info "Running report handlers."
+        @run.results.each do |result|
+          unless Outliers::Handlers::JSON.new.post result
+            @logger.error "Posting results failed."
+            exit 1
+          end
+        end
+        @logger.info "Report handlers completed."
+
         @run.failing_results.each do |r|
           if r.name
             @logger.info "Results of '#{r.name}', verifying '#{r.verification_name}' of '#{r.provider_name}:#{r.resource_name}' via '#{r.credentials_name}' failed."
@@ -39,6 +48,7 @@ module Outliers
         end
 
         @logger.info "(#{failing_count} evaluations failed, #{passing_count} evaluations passed.)"
+
 
         exit 1 unless failing_count.zero?
       end
