@@ -29,9 +29,11 @@ module Outliers
 
         @logger.info "Evaluations completed."
 
+        @logger.info "Running report handlers."
         @run.results.each do |result|
-          Outliers::Handlers::JSON.new.post(result)
+          Outliers::Handlers::JSON.new.post result
         end
+        @logger.info "Report handlers completed."
 
         @run.failing_results.each do |r|
           if r.name

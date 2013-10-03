@@ -16,6 +16,18 @@ module Outliers
         'verification_name'    => verification_name }.to_json
     end
 
+    def to_json
+      resources = passing_resources.map{|r| { 'id' => r.id, 'passing' => 1 } }
+      resources += failing_resources.map{|r| { 'id' => r.id, 'passing' => 0 } }
+
+      { 'credentials_name'     => credentials_name,
+        'name'                 => name,
+        'provider_name'        => provider_name,
+        'resource_name'        => resource_name,
+        'verification_name'    => verification_name,
+        'resources'            => resources }.to_json
+    end
+
     def initialize(args)
       @credentials_name  = args[:credentials_name]
       @failing_resources = args[:failing_resources]
