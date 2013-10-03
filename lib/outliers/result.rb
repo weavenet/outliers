@@ -8,19 +8,6 @@ module Outliers
 
     def to_json
       { 'credentials_name'     => credentials_name,
-        'failing_resource_ids' => failing_resource_ids,
-        'name'                 => name,
-        'passing_resource_ids' => passing_resource_ids,
-        'provider_name'        => provider_name,
-        'resource_name'        => resource_name,
-        'verification_name'    => verification_name }.to_json
-    end
-
-    def to_json
-      resources = passing_resources.map{|r| { 'id' => r.id, 'passing' => 1 } }
-      resources += failing_resources.map{|r| { 'id' => r.id, 'passing' => 0 } }
-
-      { 'credentials_name'     => credentials_name,
         'name'                 => name,
         'provider_name'        => provider_name,
         'resource_name'        => resource_name,
@@ -48,12 +35,10 @@ module Outliers
 
     private
 
-    def passing_resource_ids
-      passing_resources.map{|r| r.id}
-    end
-
-    def failing_resource_ids
-      failing_resources.map{|r| r.id}
+    def resources
+      r = passing_resources.map{|r| { 'id' => r.id, 'passing' => 1 } }
+      r += failing_resources.map{|r| { 'id' => r.id, 'passing' => 0 } }
+      r
     end
 
   end
