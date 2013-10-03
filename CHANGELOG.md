@@ -1,5 +1,6 @@
 ## HEAD
 
+* Renamed credentials to account
 * Adding JSON support to result
 * Refactor results
 

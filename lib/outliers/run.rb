@@ -1,6 +1,6 @@
 module Outliers
   class Run
-    attr_accessor :credentials, :results, :threads, :threaded, :thread_count
+    attr_accessor :account, :results, :threads, :threaded, :thread_count
 
     def initialize(options={})
       @results                  = []

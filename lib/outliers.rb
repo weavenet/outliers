@@ -1,8 +1,8 @@
 require "outliers/mixins.rb"
 require "outliers/verifications"
 
+require "outliers/account"
 require "outliers/collection"
-require "outliers/credentials"
 require "outliers/info"
 require "outliers/exceptions"
 require "outliers/evaluation"

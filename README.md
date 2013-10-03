@@ -24,9 +24,9 @@ To detect misconfigurations at scale, Outliers provides a framework for performi
 
 ## Getting Started
 
-Create **~/outliers.yml** with a list of credentials in the following format:
+Create **~/outliers.yml** with a list of accounts in the following format:
 
-    credential_name:
+    account_name:
       region: AWS_REGION
       access_key_id: AWS_ACCESS_ID
       secret_access_key: AWS_SECRET_KEY
