@@ -31,7 +31,10 @@ module Outliers
 
         @logger.info "Running report handlers."
         @run.results.each do |result|
-          Outliers::Handlers::JSON.new.post result
+          unless Outliers::Handlers::JSON.new.post result
+            @logger.error "Posting results failed."
+            exit 1
+          end
         end
         @logger.info "Report handlers completed."
 
