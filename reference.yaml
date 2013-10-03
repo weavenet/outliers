@@ -1,5 +1,5 @@
 aws_cloud_formation:
-  credentials:
+  account:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
     region: AWS Region
@@ -10,7 +10,7 @@ aws_cloud_formation:
       verifications: {}
 
 aws_ec2:
-  credentials:
+  account:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
     region: AWS Region
@@ -45,7 +45,7 @@ aws_ec2:
       verifications: {}
 
 aws_elb:
-  credentials:
+  account:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
     region: AWS Region
@@ -59,7 +59,7 @@ aws_elb:
           args: 'days: DAYS'
 
 aws_iam:
-  credentials:
+  account:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
     region: AWS Region
@@ -76,7 +76,7 @@ aws_iam:
           description: Verify password not set for user.
 
 aws_rds:
-  credentials:
+  account:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
     region: AWS Region
@@ -96,7 +96,7 @@ aws_rds:
       verifications: {}
 
 aws_s3:
-  credentials:
+  account:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
     region: AWS Region
@@ -115,7 +115,7 @@ aws_s3:
           description: Bucket is not configured as a website.
 
 aws_sqs:
-  credentials:
+  account:
     access_key_id: AWS Account Access Key
     secret_access_key: AWS Account Secret Key
     region: AWS Region

@@ -33,9 +33,9 @@ describe Outliers::Info do
       end
     end
 
-    it "should validate each resource has a list of credentials" do
+    it "should validate each resource has a list of account" do
       subject.reference.each_pair do |name,provider_data|
-        expect(provider_data['credentials'].class).to eq(Hash)
+        expect(provider_data['account'].class).to eq(Hash)
       end
     end
   end

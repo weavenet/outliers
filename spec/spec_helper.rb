@@ -7,8 +7,8 @@ Dir[File.expand_path(File.join(File.dirname(__FILE__),'helpers', '*.rb'))].each 
   require f
 end
 
-def credentials
-  YAML.load(fixture_file 'credentials1.yml')
+def account
+  YAML.load(fixture_file 'account1.yml')
 end
 
 def stub_logger

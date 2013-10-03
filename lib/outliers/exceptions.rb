@@ -21,7 +21,7 @@ module Outliers
     class UnknownCollection < Base
     end
 
-    class UnknownCredentials < Base
+    class UnknownAccount < Base
     end
 
     class UnknownVerification < Base

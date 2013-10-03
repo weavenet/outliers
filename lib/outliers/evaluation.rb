@@ -8,16 +8,16 @@ module Outliers
       @name = args[:name]
     end
 
-    def connect(credentials_name, options={})
-      @credentials_name = credentials_name
-      @provider_name    = merged_credentials(credentials_name, options).fetch 'provider'
+    def connect(account_name, options={})
+      @account_name = account_name
+      @provider_name    = merged_account(account_name, options).fetch 'provider'
 
-      logger.info "Connecting via '#{credentials_name}' to '#{@provider_name}'."
+      logger.info "Connecting via '#{account_name}' to '#{@provider_name}'."
       logger.info "Including connection options '#{options.map {|k,v| "#{k}=#{v}"}.join(',')}'." if options.any?
 
       set_provider_name_array
 
-      @provider = Outliers::Provider.connect_to merged_credentials(credentials_name, options)
+      @provider = Outliers::Provider.connect_to merged_account(account_name, options)
     end
 
     def resources(name, targets=[])
@@ -47,7 +47,7 @@ module Outliers
 
       verification_result = resource_collection.verify verification_name, arguments.keys_to_sym
 
-      result = Outliers::Result.new credentials_name:  @credentials_name,
+      result = Outliers::Result.new account_name:  @account_name,
                                     failing_resources: verification_result.fetch(:failing_resources),
                                     name:              @name,
                                     passing_resources: verification_result.fetch(:passing_resources),
@@ -79,13 +79,13 @@ module Outliers
       raise Outliers::Exceptions::UnknownCollection.new "Unknown collection '#{name}'."
     end
 
-    def credentials(name)
-      @run.credentials.fetch name
+    def account(name)
+      @run.account.fetch name
     end
 
-    def merged_credentials(name, options)
-      credentials(name).merge! options.keys_to_s
-      credentials(name).merge :name => name
+    def merged_account(name, options)
+      account(name).merge! options.keys_to_s
+      account(name).merge :name => name
     end
 
     def logger

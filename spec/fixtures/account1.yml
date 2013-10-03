@@ -1,4 +1,4 @@
-test_credentials_2:
+test_account_1:
   region: us-west-1
   provider: aws_ec2
   access_key_id: 01234567890123456789
