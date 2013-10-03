@@ -96,7 +96,7 @@ describe Outliers::Evaluation do
 
       it "should verify the given method" do
         resources.should_receive(:verify).with('test_verification?', {}).and_return verification_response
-        Outliers::Result.should_receive(:new).with(account_name:   'test_account_1',
+        Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
@@ -108,7 +108,7 @@ describe Outliers::Evaluation do
 
       it "should convert all options to symbols" do
         resources.should_receive(:verify).with('test_verification?', :test => false).and_return verification_response
-        Outliers::Result.should_receive(:new).with(account_name:   'test_account_1',
+        Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
@@ -121,14 +121,14 @@ describe Outliers::Evaluation do
       it "should run verify multiple times in given evaluation" do
         resources.should_receive(:verify).with('test_verification1?', :test => false).and_return verification_response
         resources.should_receive(:verify).with('test_verification2?', :test => true).and_return verification_response
-        Outliers::Result.should_receive(:new).with(account_name:   'test_account_1',
+        Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification1?').and_return result1
-        Outliers::Result.should_receive(:new).with(account_name:   'test_account_1',
+        Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
