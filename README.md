@@ -73,8 +73,8 @@ Sample Output:
 
 ## Examples
 
-See [examples](http://brettweavnet.github.io/outliers/examples) for a list of more advanced evaluations.
+See [examples](http://www.getoutliers.com/documentation/examples) for a list of more advanced evaluations.
 
 ## References
 
-See [providers](http://brettweavnet.github.io/outliers/providers), [resources](http://brettweavnet.github.io/outliers/resources) and [filters](http://brettweavnet.github.io/outliers/filters) for additional documentation.
+See [providers](http://www.getoutliers.com/documentation/providers), [resources](http://www.getoutliers.com/documentation/resources) and [filters](http://www.getoutliers.com/documentation/filters) for additional documentation.
