@@ -89,4 +89,4 @@ See [examples](http://www.getoutliers.com/documentation/examples) for a list of 
 
 ## Documentation
 
-See [providers](http://www.getoutliers.com/documentation/providers), [resources](http://www.getoutliers.com/documentation/resources) and [filters](http://www.getoutliers.com/documentation/filters) for additional documentation.
+See more information on the Outliers DSL see the [documentation](http://www.getoutliers.com/documentation) page.
