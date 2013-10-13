@@ -5,15 +5,6 @@
 
 A framework to detect misconfigurations (Outliers).
 
-## Overview
-
-To detect misconfigurations at scale, Outliers provides a framework for performing complex evaluations of cloud resources based on the following:
-
-* Applications rely on **resources** delivered from multiple **providers** (EC2, S3, etc).
-* Resource configuration can be evaluated against specific **verifications**  (Instance launched from given AMI, S3 bucket contains no public objects, etc).
-* Verifications can be performed against a subset of resources based on a **filter**.
-* Those not passing verification, are flagged as Outliers.
-
 ## Requirements
 
 * Ruby 1.9.3 or greater
