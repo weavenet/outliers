@@ -71,18 +71,6 @@ Sample Output:
     I, [2013-09-24T09:42:44.804147 #4940]  INFO -- : Evaluations completed.
     I, [2013-09-24T09:42:44.804211 #4940]  INFO -- : (0 evaluations failed, 1 evaluations passed.)
 
-## Results
-
-To return outliers results, you must set the **OUTLIERS_KEY** environment variable.
-
-    export OUTLIERS_KEY=abcd1234
-
-To modify the URL where reuslts are sent, set **OUTLIERS_URL** environment variable.
-
-By default, results are sent to **https://api.getoutliers.com**
-
-    export OUTLIERS_URL=http://localhost:3000
-
 ## Examples
 
 See [examples](http://www.getoutliers.com/documentation/examples) for a list of more advanced evaluations.
