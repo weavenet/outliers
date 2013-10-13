@@ -5,7 +5,7 @@ module Outliers
         class LoadBalancer < Resource
 
           def ssl_certificates_valid?(args)
-            days = args[:days]
+            days = args
             pass = true
 
             logger.debug "Load Balancer '#{id}' has no certificates." unless certificates.any?

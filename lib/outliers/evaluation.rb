@@ -9,8 +9,8 @@ module Outliers
     end
 
     def connect(account_name, options={})
-      @account_name = account_name
-      @provider_name    = merged_account(account_name, options).fetch 'provider'
+      @account_name  = account_name
+      @provider_name = merged_account(account_name, options).fetch 'provider'
 
       logger.info "Connecting via '#{account_name}' to '#{@provider_name}'."
       logger.info "Including connection options '#{options.map {|k,v| "#{k}=#{v}"}.join(',')}'." if options.any?
@@ -20,37 +20,32 @@ module Outliers
       @provider = Outliers::Provider.connect_to merged_account(account_name, options)
     end
 
-    def resources(name, targets=[])
-      logger.info "Loading '#{name}' resource collection."
+    def resources(name, targets=nil)
+      logger.debug "Loading '#{name}' resource collection."
+
       @resource_name       = name
       @resource_collection = collection_object name
 
-      targets_array = Array(targets)
-
-      if targets_array.any?
-        logger.info "Verifying '#{targets_array.join(', ')}' from '#{name}' collection."
-        resource_collection.targets = targets_array
-      end
+      load_targets targets
       resource_collection
     end
 
-    def exclude(exclusions)
-      resource_collection.exclude_by_key Array(exclusions)
+    def filter(action, args)
+      resource_collection.filter action, args.keys_to_s
     end
 
-    def filter(args)
-      resource_collection.filter args.keys_to_s
-    end
-
-    def verify(verification_name, arguments={})
+    def verify(verification_name, arguments=nil)
       @resources_loaded ||= resource_collection.load_all
 
-      verification_result = resource_collection.verify verification_name, arguments.keys_to_sym
+      args_to_send = convert_verification_arguments arguments
 
-      result = Outliers::Result.new account_name:  @account_name,
+      verification_result = resource_collection.verify verification_name, args_to_send
+
+      result = Outliers::Result.new account_name:      @account_name,
                                     failing_resources: verification_result.fetch(:failing_resources),
                                     name:              @name,
                                     passing_resources: verification_result.fetch(:passing_resources),
+                                    arguments:         Array(args_to_send),
                                     provider_name:     @provider_name,
                                     resource_name:     @resource_name,
                                     verification_name: verification_name
@@ -61,6 +56,36 @@ module Outliers
     end
 
     private
+
+    def load_targets(targets)
+      case targets.class.to_s
+      when "Hash"
+        t = targets.keys_to_sym
+        if t.has_key? :include
+          list = Array(t.fetch :include)
+          logger.info "Targeting '#{list.join(', ')}' from '#{@resource_name}' collection."
+          resource_collection.targets = list
+        elsif t.has_key? :exclude
+          list = Array(t.fetch :exclude)
+          logger.info "Excluding '#{list.join(', ')}' from '#{@resource_name}' collection."
+          resource_collection.exclude_by_key list
+        else
+          logger.info "Targeting all resources in '#{@resource_name}' collection."
+        end
+      when "String", "Array"
+        list = Array(targets)
+        logger.info "Targeting '#{list.join(', ')}' from '#{@resource_name}' collection."
+        resource_collection.targets = list
+      when "Nil"
+        logger.info "Targeting all resources in '#{@resource_name}' collection."
+      end
+    end
+
+    def convert_verification_arguments(arguments)
+      return Array(arguments) if arguments.is_a?(Array) || arguments.is_a?(String)
+      return nil if arguments.is_a?(NilClass)
+      raise Outliers::Exceptions::InvalidArguments.new "Verification arguments '#{arguments}' invalid. Must be a string or array."
+    end
 
     def set_provider_name_array
       begin
@@ -94,4 +119,3 @@ module Outliers
 
   end
 end
-

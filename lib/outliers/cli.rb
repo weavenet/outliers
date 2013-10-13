@@ -31,7 +31,7 @@ module Outliers
       puts ''
       puts 'Append -h for help on specific subcommand.'
       puts ''
-      puts 'See http://brettweavnet.github.io/outliers for documentation.'
+      puts 'See http://www.getoutliers.com/documentation for documentation.'
       puts ''
 
       puts 'Commands:'

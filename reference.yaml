@@ -30,7 +30,7 @@ aws_ec2:
           description: Instance status is running.
         valid_image_id:
           description: ami_ids=ami_id1,ami_id2 - Instances Image ID (AMI) is in given list.
-          args: 'image_ids: [IMAGE_ID1, IMAGEID2]'
+          args: '[IMAGE_ID1, IMAGEID2]'
         vpc:
           description: Instance is in a VPC.
     security_group:
@@ -56,7 +56,7 @@ aws_elb:
       verifications:
         ssl_certificates_valid:
           description: Validates all SSL certificates associated with an ELB are valid for given number of days.
-          args: 'days: DAYS'
+          args: 'DAYS'
 
 aws_iam:
   account:
@@ -87,7 +87,7 @@ aws_rds:
       verifications:
         backup_retention_period:
           description: Validate the backup retention period equals given days for the db_instance.
-          args: 'days: DAYS'
+          args: 'DAYS'
         multi_az:
           description: RDS Multi AZ set to yes.
     db_snapshot:

@@ -32,6 +32,7 @@ describe Outliers::Evaluation do
       expect(subject.provider_name_array).to eq(['Aws', 'Ec2'])
     end
   end
+    
 
   context "with connection and resources" do 
     before do
@@ -59,28 +60,59 @@ describe Outliers::Evaluation do
           to eq(Outliers::Providers::Aws::Rds)
       end
 
-      it "should set the collection targets if specified" do
-        subject.connect('test_account_1', :provider => 'aws_rds')
-        expect(subject.resources('db_instance', 'instance-123').targets).to eq ['instance-123']
-      end
-    end
+      context "testing resource assignment" do
+        before do
+          subject.connect('test_account_1', :provider => 'aws_rds')
+        end
 
-    context "#exclude" do
-      it "should convert input to array and send call exclude_by_key with value" do
-        resources.should_receive(:exclude_by_key).with(['test'])
-        subject.exclude 'test'
+        it "should set the collection targets if specified" do
+          subject.resources('db_instance', include: 'instance-123')
+          expect(subject.resource_collection.targets).to eq ['instance-123']
+        end
+
+        it "should send call exclude_by_key with given array" do
+          Outliers::Resources::Aws::Rds::DbInstanceCollection.
+            any_instance.should_receive(:exclude_by_key).with(['instance-123', 'instance-321'])
+          subject.resources('db_instance', exclude: ['instance-123', 'instance-321'])
+        end
+
+        it "should convert input to array and send call exclude_by_key with value" do
+          Outliers::Resources::Aws::Rds::DbInstanceCollection.
+            any_instance.should_receive(:exclude_by_key).with(['instance-123'])
+          subject.resources('db_instance', exclude: 'instance-123')
+        end
+
+        it "should include the given string as array" do
+          subject.resources('db_instance', include: 'instance-123')
+          expect(subject.resource_collection.targets).to eq ['instance-123']
+        end
+
+        it "should include the array from the include key" do
+          subject.resources('db_instance', include: ['instance-123', 'instance-321'])
+          expect(subject.resource_collection.targets).to eq ['instance-123', 'instance-321']
+        end
+
+        it "should include the array" do
+          subject.resources('db_instance', ['instance-123', 'instance-321'])
+          expect(subject.resource_collection.targets).to eq ['instance-123', 'instance-321']
+        end
+
+        it "should include the string" do
+          subject.resources('db_instance', 'instance-123')
+          expect(subject.resource_collection.targets).to eq ['instance-123']
+        end
       end
     end
 
     context "#filter" do
       it "should apply the given filter to the collection" do
-        resources.should_receive(:filter).with('tag' => 'Name:test123')
-        subject.filter 'tag' => 'Name:test123'
+        resources.should_receive(:filter).with('include', 'tag' => 'Name:test123')
+        subject.filter 'include', 'tag' => 'Name:test123'
       end
 
       it "should convert keys in the args hash to strings" do
-        resources.should_receive(:filter).with('tag' => 'Name:test123')
-        subject.filter tag: 'Name:test123'
+        resources.should_receive(:filter).with('include', 'tag' => 'Name:test123')
+        subject.filter 'include', tag: 'Name:test123'
       end
     end
 
@@ -95,33 +127,54 @@ describe Outliers::Evaluation do
       end
 
       it "should verify the given method" do
-        resources.should_receive(:verify).with('test_verification?', {}).and_return verification_response
+        resources.should_receive(:verify).with('test_verification?', nil).and_return verification_response
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
+                                                   arguments:         [],
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification?').and_return result1
-        expect(subject.verify('test_verification?', {})).to eq([result1])
+        expect(subject.verify('test_verification?')).to eq([result1])
       end
 
       it "should convert all options to symbols" do
-        resources.should_receive(:verify).with('test_verification?', :test => false).and_return verification_response
+        resources.should_receive(:verify).with('test_verification?', ['test123']).and_return verification_response
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
+                                                   arguments:         ['test123'],
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification?').and_return result1
-        expect(subject.verify('test_verification?', { 'test' => false } )).to eq([result1])
+        expect(subject.verify('test_verification?', ['test123'] )).to eq([result1])
+      end
+
+      it "should convert arguments string to array in results" do
+        resources.should_receive(:verify).with('test_verification?', ['arg']).and_return verification_response
+        Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
+                                                   arguments:         ['arg'],
+                                                   failing_resources: ['3','4'],
+                                                   name:              'test',
+                                                   passing_resources: ['1','2'],
+                                                   provider_name:     'aws_ec2',
+                                                   resource_name:     'security_group',
+                                                   verification_name: 'test_verification?').and_return result1
+        expect(subject.verify('test_verification?', 'arg' )).to eq([result1])
+      end
+
+      it "should raise and error if the arguments are not nil, string or array" do
+        expect { subject.verify('test_verification?', arg: 'bad_arg' ) }.
+          to raise_error(Outliers::Exceptions::InvalidArguments)
       end
 
       it "should run verify multiple times in given evaluation" do
-        resources.should_receive(:verify).with('test_verification1?', :test => false).and_return verification_response
-        resources.should_receive(:verify).with('test_verification2?', :test => true).and_return verification_response
+        resources.should_receive(:verify).with('test_verification1?', ['arg1']).and_return verification_response
+        resources.should_receive(:verify).with('test_verification2?', ['arg2']).and_return verification_response
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
+                                                   arguments:         ['arg1'],
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
@@ -129,14 +182,15 @@ describe Outliers::Evaluation do
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification1?').and_return result1
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
+                                                   arguments:         ['arg2'],
                                                    failing_resources: ['3','4'],
                                                    name:              'test',
                                                    passing_resources: ['1','2'],
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification2?').and_return result2
-        expect(subject.verify('test_verification1?', { 'test' => false })).to eq [result1]
-        expect(subject.verify('test_verification2?', { 'test' => true })).to eq [result1, result2]
+        expect(subject.verify('test_verification1?', ['arg1'])).to eq [result1]
+        expect(subject.verify('test_verification2?', ['arg2'])).to eq [result1, result2]
       end
     end
 

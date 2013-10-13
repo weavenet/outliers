@@ -13,7 +13,7 @@ end
 
 def stub_logger
   Outliers.logger stub 'test'
-  Outliers.logger.stub :debug => true, :info => true, :warn => true
+  Outliers.logger.stub :debug => true, :info => true, :warn => true, :error => true
 end
          
 RSpec.configure do |config|

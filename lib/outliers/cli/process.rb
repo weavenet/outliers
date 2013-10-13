@@ -2,7 +2,7 @@ module Outliers
   module CLI
     class Process
       def process
-        @options = { threads: 1 }
+        @options = { threads: 1, log_level: 'info' }
 
         option_parser.parse!
 
@@ -15,6 +15,15 @@ module Outliers
           @run.threaded     = true
           @run.thread_count = @options[:threads]
         end
+
+        log_level = @options.fetch(:log_level).upcase
+
+        unless ["DEBUG", "INFO", "WARN", "ERROR"].include? log_level
+          @logger.error "Invalid log level. Valid levels are debug, info, warn, error."
+          exit 1
+        end
+
+        @logger.level = Logger.const_get log_level
 
         begin
           @run.account = Account.load_from_file "#{ENV['HOME']}/.outliers.yml"
@@ -29,14 +38,18 @@ module Outliers
 
         @logger.info "Evaluations completed."
 
-        @logger.info "Running report handlers."
-        @run.results.each do |result|
-          unless Outliers::Handlers::JSON.new.post result
-            @logger.error "Posting results failed."
-            exit 1
+        if key
+          @logger.info "Running report handlers."
+          @run.results.each do |result|
+            unless Outliers::Handlers::OutliersApi.new.post result, key, results_url
+              @logger.error "Report handler failed."
+              exit 1
+            end
           end
+          @logger.info "Report handlers completed."
+        else
+          @logger.info "OUTLIERS_KEY not set, not sending results."
         end
-        @logger.info "Report handlers completed."
 
         @run.failing_results.each do |r|
           if r.name
@@ -48,7 +61,6 @@ module Outliers
         end
 
         @logger.info "(#{failing_count} evaluations failed, #{passing_count} evaluations passed.)"
-
 
         exit 1 unless failing_count.zero?
       end
@@ -63,16 +75,32 @@ module Outliers
 
       private
 
+      def key
+        ENV['OUTLIERS_KEY']
+      end
+
+      def url
+        ENV['OUTLIERS_URL'] ||= 'https://api.getoutliers.com'
+      end
+
+      def results_url
+        "#{url}/results"
+      end
+
       def option_parser
         OptionParser.new do |opts|
           opts.banner = "Usage: outliers process [options]"
 
-          opts.on("-t", "--threads [THREADS]", "Maximum number of evaluations threads to run concurrently (Default: 1).") do |o|
-            @options[:threads] = o.to_i
-          end
-
           opts.on("-d", "--directory [DIRECTORY]", "Directory containing evaluations to load.") do |o|
             @options[:directory] = o
+          end
+
+          opts.on("-l", "--log_level [LOG_LEVEL]", "Log level (Default: info).") do |o|
+            @options[:log_level] = o
+          end
+
+          opts.on("-t", "--threads [THREADS]", "Maximum number of evaluations threads to run concurrently (Default: 1).") do |o|
+            @options[:threads] = o.to_i
           end
         end
       end

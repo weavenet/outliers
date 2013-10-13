@@ -5,9 +5,9 @@ describe Outliers::Provider do
 
   context "#connect_to" do
     let(:account) { ( { :name               => "test_account_1",
-                            "provider"          => "aws_ec2",
-                            "secret_access_key" => "abc",
-                            "access_key_id"     => "123" } ) }
+                        "provider"          => "aws_ec2",
+                        "secret_access_key" => "abc",
+                        "access_key_id"     => "123" } ) }
 
     it "should connect to the provider specified in the given account" do
       expect(subject.connect_to(account).class).to eq(Outliers::Providers::Aws::Ec2)

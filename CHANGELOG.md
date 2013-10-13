@@ -1,4 +1,8 @@
-## HEAD
+## 0.5.0
+
+* Added exclude filters
+* Refactored and simplified DSL
+* Added basic handler
 
 ## 0.4.0
 

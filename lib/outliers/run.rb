@@ -29,6 +29,12 @@ module Outliers
 
       evaluation = Proc.new { Evaluation.new(:name => name, :run => self).instance_eval &block }
 
+      if name
+        logger.info "Loading evaluation '#{name}'."
+      else
+        logger.info "Loading unnamed evaluation."
+      end
+
       threaded ? threads << Thread.new { evaluation.call } : evaluation.call
     end
 

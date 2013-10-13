@@ -3,4 +3,4 @@ verifications:
     description: No resources exist.
   equals:
     description: Verify the list of resource mataches the given list of keys.
-    args: 'keys: [RESOURCE_ID1, RESOURCE_ID2]'
+    args: '[RESOURCE_ID1, RESOURCE_ID2]'

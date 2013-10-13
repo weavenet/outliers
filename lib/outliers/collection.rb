@@ -43,16 +43,13 @@ module Outliers
     end
 
     def exclude_by_key(exclusions)
-      @logger.info "Excluding the following resources: '#{exclusions.join(',')}'."
       save = list.reject {|u| exclusions.include? u.public_send key}
       @list = save
     end
 
-    def filter(args)
+    def filter(action, args)
       name  = args.keys.first
       value = args.fetch name
-
-      logger.info "Applying filter '#{name}' with value '#{value}'."
 
       unless self.public_methods.include? "filter_#{name}".to_sym
         raise Exceptions::UnknownFilter.new "Unknown filter '#{name}'."
@@ -60,19 +57,29 @@ module Outliers
 
       filtered_list = self.public_send "filter_#{name}", value
 
-      logger.warn "No resources match filter." unless filtered_list.any?
-
-      @list = filtered_list
+      case action
+      when 'include'
+        logger.info "Including resources filtered by '#{name}' with value '#{value}'."
+        logger.warn "No resources match filter." unless filtered_list.any?
+        @list = filtered_list & @list
+      when 'exclude'
+        logger.info "Excluding resources filtered by '#{name}' with value '#{value}'."
+        @list -= filtered_list
+      else
+        raise Exceptions::UnknownFilterAction.new "Filters must be either 'include' or 'exclude'."
+      end
     end
 
-    def verify(name, arguments={})
-      logger.info "Verifying '#{name}'."
+    def verify(name, arguments=nil)
+      logger.debug "Verifying '#{name}'."
 
       name += "?" unless name =~ /^.*\?$/
 
       unless list.any?
         return { failing_resources: [], passing_resources: [] }
       end
+
+      set_target_resources name if targets.any?
 
       logger.debug "Target resources '#{list_by_key.join(', ')}'."
 
@@ -125,7 +132,7 @@ module Outliers
     end
 
     def set_target_resources(verification)
-      logger.info "Verifying target '#{targets.join(', ')}'."
+      logger.debug "Setting target resource(s) to '#{targets.join(', ')}'."
 
       @list = list.select {|r| targets.include? r.id }
 
@@ -137,8 +144,6 @@ module Outliers
     end
 
     def send_resources_verification(verification, arguments)
-      set_target_resources verification if targets.any?
-
       failing_resources = reject do |resource|
         r = send_verification resource, verification, arguments
         logger.debug "Verification of resource '#{resource.id}' #{r ? 'passed' : 'failed'}."
@@ -154,12 +159,12 @@ module Outliers
 
     def send_verification(object, verification, arguments) 
       if object.method(verification).arity.zero?
-        if arguments.any?
+        unless arguments.nil?
           raise Outliers::Exceptions::NoArgumentRequired.new "Verification '#{verification}' does not require an arguments."
         end
         object.public_send verification
       else
-        if arguments.none?
+        if arguments.nil?
           raise Outliers::Exceptions::ArgumentRequired.new "Verification '#{verification}' requires arguments."
         end
         object.public_send verification, arguments

@@ -5,7 +5,8 @@ describe Outliers::Result do
   let(:resource2) {stub 'resource2', id: 2}
 
   context "passing" do
-    subject { Outliers::Result.new account_name:  'cnt',
+    subject { Outliers::Result.new account_name:      'cnt',
+                                   arguments:         ['test123'],
                                    failing_resources: [],
                                    name:              'evalme',
                                    passing_resources: [resource1, resource2],
@@ -48,6 +49,7 @@ describe Outliers::Result do
       it "should return the results as json" do
         resources = [ { 'id' => 1, 'passing' => 1 }, { 'id' => 2, 'passing' => 1 } ]
         json =  { 'account_name'         => 'cnt',
+                  'arguments'            => ['test123'],
                   'name'                 => 'evalme',
                   'provider_name'        => 'aws',
                   'resource_name'        => 'instance',
@@ -56,10 +58,25 @@ describe Outliers::Result do
         expect(subject.to_json).to eq(json)
       end
     end
+
+    context "#to_hash" do
+      it "should return the results as hash" do
+        resources = [ { 'id' => 1, 'passing' => 1 }, { 'id' => 2, 'passing' => 1 } ]
+        hash =  { 'account_name'         => 'cnt',
+                  'arguments'            => ['test123'],
+                  'name'                 => 'evalme',
+                  'provider_name'        => 'aws',
+                  'resource_name'        => 'instance',
+                  'verification_name'    => 'vpc',
+                  'resources'            => resources }
+        expect(subject.to_hash).to eq(hash)
+      end
+    end
   end
 
   context "failing" do
     subject { Outliers::Result.new account_name:      'cnt',
+                                   arguments:         ['test123'],
                                    failing_resources: [resource1, resource2],
                                    name:              'evalme',
                                    passing_resources: [],

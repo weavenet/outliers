@@ -1,1 +1,1 @@
-require 'outliers/handlers/json'
+require 'outliers/handlers/outliers_api'

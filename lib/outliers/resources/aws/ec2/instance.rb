@@ -25,7 +25,7 @@ module Outliers
           end
 
           def valid_image_id?(args)
-            image_ids = Array(args[:image_ids])
+            image_ids = Array(args)
 
             logger.debug "Verifying Image ID '#{image_id}' is one of '#{image_ids.join(', ')}'."
             image_ids.include? image_id

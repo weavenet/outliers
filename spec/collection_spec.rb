@@ -4,6 +4,7 @@ describe Outliers::Collection do
   let(:provider) { mock 'provider' }
   let(:resource1) { mock 'resource1' }
   let(:resource2) { mock 'resource2' }
+  let(:resource3) { mock 'resource3' }
 
   subject { Outliers::Collection.new provider }
 
@@ -12,7 +13,7 @@ describe Outliers::Collection do
     resource1.stub name: 'resource1', key: 'name', id: 'resource1'
     resource2.stub name: 'resource2', key: 'name', id: 'resource2'
     subject.stub :load_all => [resource1, resource2],
-                 :class => Outliers::Resources::Aws::Ec2::SecurityGroupCollection
+                 :class    => Outliers::Resources::Aws::Ec2::SecurityGroupCollection
   end
 
   context "#to_human" do
@@ -36,15 +37,55 @@ describe Outliers::Collection do
   end
 
   context "#filter" do
-    it "should apply the given filter to resources" do
+    before do
+      subject.instance_variable_set(:@list, [resource1, resource2, resource3])
+    end
+
+    it "should include resources matched by include filter" do
       subject.should_receive('filter_tag').with('Name:test123').and_return [resource1]
-      subject.filter 'tag' => 'Name:test123'
+      subject.filter 'include', tag: 'Name:test123'
       expect(subject.list).to eq([resource1])
     end
 
+    it "should exclude resources matched by exclude filter" do
+      subject.should_receive('filter_tag').with('Name:test123').and_return [resource1]
+      subject.filter 'exclude', tag: 'Name:test123'
+      expect(subject.list).to eq([resource2, resource3])
+    end
+
+    it "should apply multiple exclude filters" do
+      subject.should_receive('filter_tag').with('Name:test123').and_return [resource1]
+      subject.should_receive('filter_tag').with('Name:test321').and_return [resource2]
+      subject.filter 'exclude', tag: 'Name:test123'
+      subject.filter 'exclude', tag: 'Name:test321'
+      expect(subject.list).to eq([resource3])
+    end
+
+    it "should apply multiple include filters and only return the union" do
+      subject.should_receive('filter_tag').with('Name:test123').and_return [resource1, resource3]
+      subject.should_receive('filter_tag').with('Name:test321').and_return [resource2, resource3]
+      subject.filter 'include', tag: 'Name:test123'
+      subject.filter 'include', tag: 'Name:test321'
+      expect(subject.list).to eq([resource3])
+    end
+
+    it "should apply exclude and include filters and only return the union" do
+      subject.should_receive('filter_tag').with('Name:test123').and_return [resource1, resource3]
+      subject.should_receive('filter_tag').with('Name:test321').and_return [resource1, resource2]
+      subject.filter 'include', tag: 'Name:test123'
+      subject.filter 'exclude', tag: 'Name:test321'
+      expect(subject.list).to eq([resource3])
+    end
+
     it "should raise an exception if the filter does not exist" do
-      expect { subject.filter('bogus' => 'Name:test123') }.
+      expect { subject.filter('include', 'bogus' => 'Name:test123') }.
         to raise_error Outliers::Exceptions::UnknownFilter
+    end
+
+    it "should raise an exception if the filter action does not exist" do
+      subject.should_receive('filter_tag').with('Name:test123').and_return [resource1]
+      expect { subject.filter('bad_action', 'tag' => 'Name:test123') }.
+        to raise_error Outliers::Exceptions::UnknownFilterAction
     end
   end
 
@@ -72,16 +113,16 @@ describe Outliers::Collection do
     end
 
     it "should verify the given verification against the colection" do
-      expect(subject.verify 'none_exist?', {}).
+      expect(subject.verify 'none_exist?').
         to eq( { failing_resources: [resource1, resource2], passing_resources: [] } )
     end
 
     it "should raise unkown verification if the verification does not exist" do
-      expect { subject.verify 'none', {} }.to raise_error Outliers::Exceptions::UnknownVerification
+      expect { subject.verify 'none' }.to raise_error Outliers::Exceptions::UnknownVerification
     end
 
     it "should verify the given verification against the colection with options" do
-      expect(subject.verify 'equals?', :keys => ['resource1', 'resource2']).
+      expect(subject.verify 'equals?', ['resource1', 'resource2']).
         to eq( { failing_resources: [], passing_resources: [resource1, resource2] } )
     end
 

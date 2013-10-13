@@ -26,17 +26,17 @@ describe Outliers::Verifications::Shared do
   context "#equals?" do
     it "should verify the list of resources equals the list of keys and return no failing reosurces" do
       subject.stub :list_by_key => ['resource1'], :list => [resource1]
-      expect(subject.equals?(:keys => ['resource1'])).to eq([])
+      expect(subject.equals?(['resource1'])).to eq([])
     end
 
     it "should verify the list of resources equals the single key and return no failing resources" do
       subject.stub :list_by_key => ['resource1'], :list => [resource1]
-      expect(subject.equals?(:keys => 'resource1')).to eq([])
+      expect(subject.equals?('resource1')).to eq([])
     end
 
     it "should return resources which do not match the given list" do
       subject.stub :list_by_key => ['resource1', 'resource2'], :list => [resource1, resource2]
-      expect(subject.equals?(:keys => 'resource1')).to eq([resource2])
+      expect(subject.equals?('resource1')).to eq([resource2])
     end
   end
 end

@@ -12,7 +12,13 @@ module Outliers
     class ArgumentRequired < Base
     end
 
+    class HandlerError < Base
+    end
+
     class InvalidBucket < Base
+    end
+
+    class InvalidArguments < Base
     end
 
     class NoArgumentRequired < Base
@@ -28,6 +34,9 @@ module Outliers
     end
 
     class UnknownFilter < Base
+    end
+
+    class UnknownFilterAction < Base
     end
 
     class UnknownProvider < Base

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["brett@weav.net"]
   spec.description   = %q{Configuraiton verification framework.}
   spec.summary       = %q{Configuration verification framework.}
-  spec.homepage      = "https://github.com/brettweavnet/outliers"
+  spec.homepage      = "http://www.getoutliers.com/documentation"
   spec.license       = "Apache2"
 
   spec.files         = `git ls-files`.split($/)

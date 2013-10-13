@@ -8,7 +8,7 @@ module Outliers
           end
 
           def backup_retention_period?(args)
-            days = args[:days]
+            days = args
 
             current = source.backup_retention_period
             logger.debug "Verifying '#{id}' retention period of '#{current}' equals '#{days}' days."

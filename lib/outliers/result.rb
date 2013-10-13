@@ -3,20 +3,26 @@ require 'json'
 module Outliers
   class Result
 
-    attr_reader :account_name, :failing_resources, :name, :passing_resources,
+    attr_reader :account_name, :arguments, :failing_resources, :name, :passing_resources,
                 :provider_name, :resource_name, :verification_name
 
     def to_json
+      to_hash.to_json
+    end
+
+    def to_hash
       { 'account_name'      => account_name,
+        'arguments'         => arguments,
         'name'              => name,
         'provider_name'     => provider_name,
         'resource_name'     => resource_name,
         'verification_name' => verification_name,
-        'resources'         => resources }.to_json
+        'resources'         => resources }
     end
 
     def initialize(args)
       @account_name      = args[:account_name]
+      @arguments         = args[:arguments]
       @failing_resources = args[:failing_resources]
       @name              = args[:name] || 'unspecified'
       @passing_resources = args[:passing_resources]
