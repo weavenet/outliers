@@ -60,14 +60,8 @@ Sample Output:
     I, [2013-09-24T09:42:39.925657 #4940]  INFO -- : Connecting via 'aws_prod' to 'aws_ec2'.
     I, [2013-09-24T09:42:39.925703 #4940]  INFO -- : Including connection options 'provider=aws_ec2,region=us-east-1'.
     I, [2013-09-24T09:42:39.928945 #4940]  INFO -- : Loading 'instance' resource collection.
-    D, [2013-09-24T09:42:39.929015 #4940] DEBUG -- : Connecting to region 'us-east-1'.
-    I, [2013-09-24T09:42:41.192295 #4940]  INFO -- : Verifying 'vpc?'.
-    D, [2013-09-24T09:42:41.192498 #4940] DEBUG -- : Target resources 'i-abcd0001, i-abcd0002, i-abcd0003, i-abcd0004'.
-    D, [2013-09-24T09:42:41.476478 #4940] DEBUG -- : Verification of resource 'i-abcd0001' passed.
-    D, [2013-09-24T09:42:42.025429 #4940] DEBUG -- : Verification of resource 'i-abcd0002' passed.
-    D, [2013-09-24T09:42:42.278990 #4940] DEBUG -- : Verification of resource 'i-abcd0003' passed.
-    D, [2013-09-24T09:42:44.803911 #4940] DEBUG -- : Verification of resource 'i-abcd0004' passed.
-    I, [2013-09-24T09:42:44.804036 #4940]  INFO -- : Verification 'vpc?' passed.
+    I, [2013-09-24T09:42:41.192295 #4940]  INFO -- : Verifying 'vpc'.
+    I, [2013-09-24T09:42:44.804036 #4940]  INFO -- : Verification 'vpc' passed.
     I, [2013-09-24T09:42:44.804147 #4940]  INFO -- : Evaluations completed.
     I, [2013-09-24T09:42:44.804211 #4940]  INFO -- : (0 evaluations failed, 1 evaluations passed.)
 
