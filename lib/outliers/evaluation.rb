@@ -82,9 +82,9 @@ module Outliers
     end
 
     def convert_verification_arguments(arguments)
-      return Array(arguments) if arguments.is_a?(Array) || arguments.is_a?(String)
+      return Array(arguments) if arguments.is_a?(Array) || arguments.is_a?(String) || arguments.is_a?(Integer)
       return nil if arguments.is_a?(NilClass)
-      raise Outliers::Exceptions::InvalidArguments.new "Verification arguments '#{arguments}' invalid. Must be a string or array."
+      raise Outliers::Exceptions::InvalidArguments.new "Verification arguments '#{arguments}' invalid. Must be a string, integer or array."
     end
 
     def set_provider_name_array
