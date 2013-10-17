@@ -1,4 +1,4 @@
-## HEAD
+## 0.5.1
 
 * Added provider, colleciton and resource lookup methods
 
