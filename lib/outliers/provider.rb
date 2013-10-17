@@ -3,6 +3,10 @@ module Outliers
 
     attr_reader :account
 
+    def self.find_by_name(name)
+      Outliers::Providers.name_map.fetch name, nil
+    end
+
     def self.connect_to(account)
       provider = account.fetch 'provider'
       Outliers::Providers.name_map.fetch(provider).new account
@@ -12,6 +16,14 @@ module Outliers
 
     def self.to_human
       (self.to_s.split('::') - ['Outliers', 'Providers']).map { |p| p.underscore }.join('_').downcase
+    end
+
+    def self.resources
+      Outliers::Resources.resources.select {|r| r.to_human =~ /^#{to_human}/}
+    end
+
+    def self.collections
+      Outliers::Resources.collections.select {|r| r.to_human =~ /^#{to_human}/}
     end
 
     def initialize(account)

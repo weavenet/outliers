@@ -20,7 +20,7 @@ describe Outliers::Info do
     end
 
     it "should verify each resource method has a entry in reference.yaml" do
-      expect((@resources - ['all_shared']).sort).to eq(Outliers::Resources.list.map {|r| r.to_human}.sort)
+      expect((@resources - ['all_shared']).sort).to eq(Outliers::Resource.list.map {|r| r.to_human}.sort)
     end
 
     it "should validate each resource has a verification list, filter list and description" do
