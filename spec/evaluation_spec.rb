@@ -31,6 +31,11 @@ describe Outliers::Evaluation do
       subject.connect('test_account_1', { 'provider' => 'aws_ec2' })
       expect(subject.provider_name_array).to eq(['Aws', 'Ec2'])
     end
+
+    it "should throw an error if the account is unknown" do
+      expect { subject.connect('bad_account') }.
+        to raise_error(Outliers::Exceptions::UnknownAccount)
+    end
   end
     
 
