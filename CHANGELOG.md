@@ -1,3 +1,7 @@
+## HEAD
+
+* Added provider, colleciton and resource lookup methods
+
 ## 0.5.0
 
 * Added exclude filters
