@@ -105,7 +105,9 @@ module Outliers
     end
 
     def account(name)
-      @run.account.fetch name
+      account = @run.account.fetch name, nil
+      raise Outliers::Exceptions::UnknownAccount.new "Unkown account '#{name}'." unless account
+      account
     end
 
     def merged_account(name, options)

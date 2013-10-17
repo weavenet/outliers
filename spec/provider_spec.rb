@@ -30,6 +30,15 @@ describe Outliers::Provider do
                 "secret_access_key" => "abc",
                 "access_key_id"     => "123" })
     end
+
+    it "should raise an error if the provider does not exist" do
+      expect(subject.connect_to(account).class).to eq(Outliers::Providers::Aws::Ec2)
+    end
+
+    it "should raise an error if the provider is invalid" do
+      expect(subject.connect_to(account).class).to eq(Outliers::Providers::Aws::Ec2)
+    end
+
   end
 
   context "#collections" do
