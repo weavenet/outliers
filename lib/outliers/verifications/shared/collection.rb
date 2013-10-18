@@ -16,7 +16,7 @@ module Outliers
           resources = list.map do |r|
             { id: r.id, status: 2 }
           end
-          passing = list.map{|r| r.id} == keys
+          passing = (list.map{|r| r.id} == keys)
           { resources: resources, passing: passing }
         end
 

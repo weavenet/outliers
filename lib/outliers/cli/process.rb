@@ -33,8 +33,8 @@ module Outliers
           exit 1
         end
 
-        passing_count = @run.results.map {|r| r.passed? }.count
-        failing_count = @run.results.map {|r| r.failed? }.count
+        passing_count = @run.results.select {|r| r.passed? }.count
+        failing_count = @run.results.select {|r| r.failed? }.count
 
         @logger.info "Evaluations completed."
 
@@ -59,8 +59,6 @@ module Outliers
           else
             @logger.info "Verification '#{r.verification_name}' of '#{r.provider_name}:#{r.resource_name}' via '#{r.account_name}' failed."
           end
-          failed_resources = r.resources.select{|r| r.fetch(:status) == 1}
-          @logger.info "Failing resource IDs '#{failed_resources.map{|r| r.fetch(:id)}.join(', ')}'"
         end
 
         @logger.info "(#{failing_count} evaluations failed, #{passing_count} evaluations passed.)"
