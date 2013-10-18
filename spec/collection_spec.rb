@@ -36,6 +36,10 @@ describe Outliers::Collection do
     end
   end
 
+  context "#verifications" do
+    it "should return the shared and collection verifications"
+  end
+
   context "#filter" do
     before do
       subject.instance_variable_set(:@list, [resource1, resource2, resource3])

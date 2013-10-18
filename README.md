@@ -63,3 +63,7 @@ See [examples](http://www.getoutliers.com/documentation/examples) for a list of 
 ## Documentation
 
 See more information on the Outliers DSL see the [documentation](http://www.getoutliers.com/documentation) page.
+
+## Attribution
+
+Based on [sanity](https://github.com/brettweavnet/sanity).
