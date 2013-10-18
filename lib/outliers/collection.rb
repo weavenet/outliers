@@ -75,8 +75,6 @@ module Outliers
 
       name += "?" unless name =~ /^.*\?$/
 
-      return { resources: [], passing: true } unless list.any?
-
       set_target_resources name if targets.any?
 
       logger.debug "Target resources '#{list_by_key.join(', ')}'."
