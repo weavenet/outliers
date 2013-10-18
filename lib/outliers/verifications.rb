@@ -1,1 +1,1 @@
-require 'outliers/verifications/shared'
+require 'outliers/verifications/shared/collection'

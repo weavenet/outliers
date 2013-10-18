@@ -124,7 +124,7 @@ describe Outliers::Evaluation do
     context "#verify" do
       let(:result1) { stub 'result1', :passed? => true }
       let(:result2) { stub 'result2', :passed? => true }
-      let(:verification_response) { ( { passing_resources: ['1', '2'], failing_resources: ['3', '4'] } ) }
+      let(:verification_response) { ( { resources: [{ id: '3', status: 0}, { id: '4', status: 0}], passing: true } ) }
 
       before do
         resources.should_receive(:load_all).and_return ['resource1', 'resource2']
@@ -135,9 +135,9 @@ describe Outliers::Evaluation do
         resources.should_receive(:verify).with('test_verification?', nil).and_return verification_response
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    arguments:         [],
-                                                   failing_resources: ['3','4'],
+                                                   resources:         [{ id: '3', status: 0}, { id: '4', status: 0}],
                                                    name:              'test',
-                                                   passing_resources: ['1','2'],
+                                                   passing:           true,
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification?').and_return result1
@@ -148,9 +148,9 @@ describe Outliers::Evaluation do
         resources.should_receive(:verify).with('test_verification?', ['test123']).and_return verification_response
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    arguments:         ['test123'],
-                                                   failing_resources: ['3','4'],
+                                                   resources:         [{ id: '3', status: 0}, { id: '4', status: 0}],
                                                    name:              'test',
-                                                   passing_resources: ['1','2'],
+                                                   passing:           true,
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification?').and_return result1
@@ -161,9 +161,9 @@ describe Outliers::Evaluation do
         resources.should_receive(:verify).with('test_verification?', ['arg']).and_return verification_response
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    arguments:         ['arg'],
-                                                   failing_resources: ['3','4'],
+                                                   resources:         [{ id: '3', status: 0}, { id: '4', status: 0}],
                                                    name:              'test',
-                                                   passing_resources: ['1','2'],
+                                                   passing:           true,
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification?').and_return result1
@@ -180,17 +180,17 @@ describe Outliers::Evaluation do
         resources.should_receive(:verify).with('test_verification2?', ['arg2']).and_return verification_response
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    arguments:         ['arg1'],
-                                                   failing_resources: ['3','4'],
+                                                   resources:         [{ id: '3', status: 0}, { id: '4', status: 0}],
                                                    name:              'test',
-                                                   passing_resources: ['1','2'],
+                                                   passing:           true,
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification1?').and_return result1
         Outliers::Result.should_receive(:new).with(account_name:      'test_account_1',
                                                    arguments:         ['arg2'],
-                                                   failing_resources: ['3','4'],
+                                                   resources:         [{ id: '3', status: 0}, { id: '4', status: 0}],
                                                    name:              'test',
-                                                   passing_resources: ['1','2'],
+                                                   passing:           true,
                                                    provider_name:     'aws_ec2',
                                                    resource_name:     'security_group',
                                                    verification_name: 'test_verification2?').and_return result2

@@ -4,7 +4,7 @@ module Outliers
   class Collection
 
     include Enumerable
-    include Outliers::Verifications::Shared
+    include Outliers::Verifications::Shared::Collection
 
     attr_reader :provider
     attr_accessor :targets
@@ -14,7 +14,7 @@ module Outliers
     end
 
     def self.verifications
-       Outliers::Verifications::Shared.verifications + self.resource_class.verifications 
+       Outliers::Verifications::Shared::Collection.verifications + self.resource_class.verifications 
     end
 
     def self.filters
@@ -60,7 +60,7 @@ module Outliers
       case action
       when 'include'
         logger.info "Including resources filtered by '#{name}' with value '#{value}'."
-        logger.warn "No resources match filter." unless filtered_list.any?
+        logger.warn "No resources match filter." unless (filtered_list & @list).any?
         @list = filtered_list & @list
       when 'exclude'
         logger.info "Excluding resources filtered by '#{name}' with value '#{value}'."
@@ -74,10 +74,6 @@ module Outliers
       logger.debug "Verifying '#{name}'."
 
       name += "?" unless name =~ /^.*\?$/
-
-      unless list.any?
-        return { failing_resources: [], passing_resources: [] }
-      end
 
       set_target_resources name if targets.any?
 
@@ -110,7 +106,7 @@ module Outliers
 
     def verification_exists?(name)
       m = resource_class.instance_methods - resource_class.class.instance_methods
-      m += Outliers::Verifications::Shared.instance_methods
+      m += Outliers::Verifications::Shared::Collection.instance_methods
       m -= [:source, :id, :method_missing]
       m.include? name.to_sym
     end
@@ -149,12 +145,15 @@ module Outliers
         logger.debug "Verification of resource '#{resource.id}' #{r ? 'passed' : 'failed'}."
         r
       end
-      { failing_resources: failing_resources, passing_resources: list - failing_resources }
+      passing_resources = list - failing_resources
+      resources = []
+      resources += passing_resources.map { |r| { id: r.id, status: 0 } }
+      resources += failing_resources.map { |r| { id: r.id, status: 1 } }
+      { resources: resources, passing: failing_resources.none? }
     end
 
     def send_collection_verification(verification, arguments)
-      failing_resources = send_verification(self, verification, arguments)
-      { failing_resources: failing_resources, passing_resources: list - failing_resources }
+      send_verification self, verification, arguments
     end
 
     def send_verification(object, verification, arguments) 

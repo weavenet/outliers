@@ -7,9 +7,10 @@ describe Outliers::Result do
   context "passing" do
     subject { Outliers::Result.new account_name:      'cnt',
                                    arguments:         ['test123'],
-                                   failing_resources: [],
                                    name:              'evalme',
-                                   passing_resources: [resource1, resource2],
+                                   resources:         [{ id: 'resource1', status: 0 },
+                                                       { id: 'resource1', status: 0 }],
+                                   passing:           true,
                                    provider_name:     'aws',
                                    resource_name:     'instance',
                                    verification_name: 'vpc' }
@@ -23,15 +24,13 @@ describe Outliers::Result do
     end
 
     it "should return the result information" do
-      expect(subject.passing_resources).to eq([resource1, resource2])
-    end
-
-
-    it "should return the result information" do
       expect(subject.account_name).to eq('cnt')
-      expect(subject.failing_resources).to eq([])
+      expect(subject.resources).to eq([{ id: 'resource1', status: 0 },
+                                       { id: 'resource1', status: 0 }])
       expect(subject.name).to eq('evalme')
-      expect(subject.passing_resources).to eq([resource1, resource2])
+      expect(subject.passing).to eq(true)
+      expect(subject.passed?).to eq(true)
+      expect(subject.failed?).to eq(false)
       expect(subject.provider_name).to eq('aws')
       expect(subject.resource_name).to eq('instance')
       expect(subject.verification_name).to eq('vpc')
@@ -47,28 +46,30 @@ describe Outliers::Result do
 
     context "#to_json" do
       it "should return the results as json" do
-        resources = [ { 'id' => 1, 'passing' => 1 }, { 'id' => 2, 'passing' => 1 } ]
         json =  { 'account_name'         => 'cnt',
                   'arguments'            => ['test123'],
                   'name'                 => 'evalme',
+                  'passing'              => true,
                   'provider_name'        => 'aws',
                   'resource_name'        => 'instance',
                   'verification_name'    => 'vpc',
-                  'resources'            => resources }.to_json
+                  'resources'            => [{ id: 'resource1', status: 0 },
+                                             { id: 'resource1', status: 0 }] }.to_json
         expect(subject.to_json).to eq(json)
       end
     end
 
     context "#to_hash" do
       it "should return the results as hash" do
-        resources = [ { 'id' => 1, 'passing' => 1 }, { 'id' => 2, 'passing' => 1 } ]
         hash =  { 'account_name'         => 'cnt',
                   'arguments'            => ['test123'],
                   'name'                 => 'evalme',
+                  'passing'              => true,
                   'provider_name'        => 'aws',
                   'resource_name'        => 'instance',
                   'verification_name'    => 'vpc',
-                  'resources'            => resources }
+                  'resources'            => [{ id: 'resource1', status: 0 },
+                                             { id: 'resource1', status: 0 }] }.to_hash
         expect(subject.to_hash).to eq(hash)
       end
     end

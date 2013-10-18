@@ -33,8 +33,8 @@ module Outliers
           exit 1
         end
 
-        passing_count = @run.passing_results.count
-        failing_count = @run.failing_results.count
+        passing_count = @run.results.select {|r| r.passed? }.count
+        failing_count = @run.results.select {|r| r.failed? }.count
 
         @logger.info "Evaluations completed."
 
@@ -51,13 +51,14 @@ module Outliers
           @logger.info "OUTLIERS_KEY not set, not sending results."
         end
 
-        @run.failing_results.each do |r|
+        failed_results = @run.results.select {|r| r.failed? }
+
+        failed_results.each do |r|
           if r.name
             @logger.info "Results of '#{r.name}', verifying '#{r.verification_name}' of '#{r.provider_name}:#{r.resource_name}' via '#{r.account_name}' failed."
           else
             @logger.info "Verification '#{r.verification_name}' of '#{r.provider_name}:#{r.resource_name}' via '#{r.account_name}' failed."
           end
-          @logger.info "Failing resource IDs '#{r.failing_resources.map{|r| r.id}.join(', ')}'"
         end
 
         @logger.info "(#{failing_count} evaluations failed, #{passing_count} evaluations passed.)"
