@@ -42,9 +42,9 @@ module Outliers
       verification_result = resource_collection.verify verification_name, args_to_send
 
       result = Outliers::Result.new account_name:      @account_name,
-                                    failing_resources: verification_result.fetch(:failing_resources),
+                                    resources:         verification_result.fetch(:resources),
+                                    passing:           verification_result.fetch(:passing),
                                     name:              @name,
-                                    passing_resources: verification_result.fetch(:passing_resources),
                                     arguments:         Array(args_to_send),
                                     provider_name:     @provider_name,
                                     resource_name:     @resource_name,

@@ -38,14 +38,6 @@ module Outliers
       threaded ? threads << Thread.new { evaluation.call } : evaluation.call
     end
 
-    def passing_results
-      @results.select {|r| r.passed?}
-    end
-
-    def failing_results
-      @results.reject {|r| r.passed?}
-    end
-
     private
 
     def files

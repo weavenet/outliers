@@ -1,20 +1,23 @@
 module Outliers
   module Verifications
-    module Collection
-      module Shared
+    module Shared
+      module Collection
 
         def none_exist?
-          resources = {}
-          list.each {|r| resources.merge! id: r, status: 2}
-          { resources: resources, passing: resources.any? }
+          resources = list.map do |r|
+            { id: r.id, status: 2 }
+          end
+          { resources: resources, passing: resources.none? }
         end
 
         def equals?(args)
           keys = Array(args)
           logger.debug "Verifying '#{keys.join(',')}' equals '#{list.empty? ? 'no resources' : list_by_key.join(',')}'."
-          resources = {}
-          list.each {|r| resources.merge! id: r, status: 2}
-          { resources: resources, passing: FIXME_WITH_EQUALS_LOGIC }
+          resources = list.map do |r|
+            { id: r.id, status: 2 }
+          end
+          passing = list.map{|r| r.id} == keys
+          { resources: resources, passing: passing }
         end
 
       end

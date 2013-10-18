@@ -75,9 +75,7 @@ module Outliers
 
       name += "?" unless name =~ /^.*\?$/
 
-      unless list.any?
-        return { failing_resources: [], passing_resources: [] }
-      end
+      return { resources: [], passing: true } unless list.any?
 
       set_target_resources name if targets.any?
 
@@ -110,7 +108,7 @@ module Outliers
 
     def verification_exists?(name)
       m = resource_class.instance_methods - resource_class.class.instance_methods
-      m += Outliers::Verifications::Shared.instance_methods
+      m += Outliers::Verifications::Shared::Collection.instance_methods
       m -= [:source, :id, :method_missing]
       m.include? name.to_sym
     end
@@ -149,12 +147,11 @@ module Outliers
         logger.debug "Verification of resource '#{resource.id}' #{r ? 'passed' : 'failed'}."
         r
       end
-      failing_resources
       passing_resources = list - failing_resources
-      resources = {}
-      failing_resources.each { |r| results.merge! id: r, status: 1 }
-      passing_resources.each { |r| results.merge! id: r, status: 0 }
-      { resources: resources, passing: failing_resources.any? }
+      resources = []
+      resources += passing_resources.map { |r| { id: r.id, status: 0 } }
+      resources += failing_resources.map { |r| { id: r.id, status: 1 } }
+      { resources: resources, passing: failing_resources.none? }
     end
 
     def send_collection_verification(verification, arguments)

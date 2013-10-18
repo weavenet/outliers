@@ -118,7 +118,8 @@ describe Outliers::Collection do
 
     it "should verify the given verification against the colection" do
       expect(subject.verify 'none_exist?').
-        to eq( { failing_resources: [resource1, resource2], passing_resources: [] } )
+        to eq({ resources: [{ id: "resource1", status: 2 },
+                            { id: "resource2", status: 2 }], passing: false })
     end
 
     it "should raise unkown verification if the verification does not exist" do
@@ -127,18 +128,21 @@ describe Outliers::Collection do
 
     it "should verify the given verification against the colection with options" do
       expect(subject.verify 'equals?', ['resource1', 'resource2']).
-        to eq( { failing_resources: [], passing_resources: [resource1, resource2] } )
+        to eq({ resources: [{ id: "resource1", status: 2 },
+                            { id: "resource2", status: 2 }], passing: true })
     end
 
     it "should verify the given verification against each resource in the collection" do
       [resource1, resource2].each {|r| r.define_singleton_method :valid_resource?, lambda { true } }
       expect(subject.verify 'valid_resource?').
-        to eq( { failing_resources: [], passing_resources: [resource1, resource2] } )
+        to eq({ resources: [{ id: "resource1", status: 0 },
+                            { id: "resource2", status: 0 }], passing: true })
     end
 
     it "should appaned a ? to the policy" do
       expect(subject.verify 'none_exist').
-        to eq( { failing_resources: [resource1, resource2], passing_resources: [] } )
+        to eq({ resources: [{ id: "resource1", status: 2 },
+                            { id: "resource2", status: 2 }], passing: false })
     end
 
     it "should remove all but the target resources if one is required and given" do
@@ -146,7 +150,7 @@ describe Outliers::Collection do
       resource1.should_receive(:method).with('valid_resource?').and_return(stub 'method', :arity => 0)
       resource1.should_receive(:valid_resource?).and_return false
       expect(subject.verify 'valid_resource?').
-        to eq( { failing_resources: [resource1], passing_resources: [] } )
+        to eq({ resources: [{ id: "resource1", status: 1 }], passing: false })
     end
 
     it "should raise an error if the target resources does not exist" do
@@ -165,16 +169,18 @@ describe Outliers::Collection do
         to raise_error(Outliers::Exceptions::NoArgumentRequired)
     end
 
-    it "should return empty passing and failing arrays if no resources exist in list" do
+    it "should return empty resource array if no resources exist in list" do
       subject.stub :load_all => []
-      expect(subject.verify 'valid_resource?', {}).to eq( { failing_resources: [], passing_resources: [] } )
+      expect(subject.verify 'valid_resource?', {}).
+        to eq( { resources: [], passing: true } )
     end
 
     it "should verify the given verification against each resource in the collection with options" do
       resource1.should_receive(:valid_resource?).with('test_arg' => 2).and_return true
       resource2.should_receive(:valid_resource?).with('test_arg' => 2).and_return true
       expect(subject.verify 'valid_resource?', 'test_arg' => 2).
-        to eq( { failing_resources: [], passing_resources: [resource1, resource2] } )
+        to eq( { resources: [ { id: "resource1", status: 0},
+                              { id: "resource2", status: 0}], passing: true} )
     end
   end
 

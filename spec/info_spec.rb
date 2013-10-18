@@ -42,7 +42,7 @@ describe Outliers::Info do
 
   context "#shared" do
     before do
-      @verifications = Outliers::Verifications::Shared.instance_methods.map {|m| m.to_s.chomp('?')}
+      @verifications = Outliers::Verifications::Shared::Collection.instance_methods.map {|m| m.to_s.chomp('?')}
     end
 
     it "should be able to load shared.yaml" do
