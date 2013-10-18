@@ -1,3 +1,7 @@
+## 0.6.0
+
+* Refactored results
+
 ## 0.5.1
 
 * Added provider, colleciton and resource lookup methods
