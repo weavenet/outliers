@@ -6,8 +6,8 @@ require 'outliers/version'
 Gem::Specification.new do |spec|
   spec.name          = "outliers"
   spec.version       = Outliers::VERSION
-  spec.authors       = ["Brett Weaver"]
-  spec.email         = ["brett@weav.net"]
+  spec.authors       = ["brettweavnet"]
+  spec.email         = ["open-source-845@weav.net"]
   spec.description   = %q{Configuraiton verification framework.}
   spec.summary       = %q{Configuration verification framework.}
   spec.homepage      = "http://www.getoutliers.com/documentation"
